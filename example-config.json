@@ -1,0 +1,16 @@
+{
+  "commands": [
+    {
+      "name": "EnsembleFrontend",
+      "fileName": "yarn.cmd",
+      "arguments": "run dev",
+      "workingDirectory": "C:\\dev\\ensemble\\client"
+    },
+    {
+      "name": "EnsembleApi",
+      "fileName": "go.exe",
+      "arguments": "run .",
+      "workingDirectory": "C:\\dev\\ensemble\\api"
+    }
+  ]
+}
