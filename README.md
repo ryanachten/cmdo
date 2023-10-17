@@ -9,7 +9,7 @@ Runs multiple commands in parallel
 Supply a configuration file containing different commands you want to execute in parallel
 
 ```bash
-dotnet run -- --config .\example-config.json
+go run .\main.go --config .\example-config.json
 ```
 
 The configuration file must conform to the following API
@@ -18,15 +18,15 @@ The configuration file must conform to the following API
 {
   "commands": [
     {
-      "name": "EnsembleFrontend", // name of the command
-      "fileName": "yarn.cmd", // executable to perform the command
-      "arguments": "run dev", // arguments to be supplied as part of the command
-      "workingDirectory": "C:\\dev\\ensemble\\client" // working directory to perform the command in
+      "name": "EnsembleFrontend",
+      "executable": "yarn",
+      "arguments": ["run", "dev"],
+      "workingDirectory": "C:\\dev\\ensemble\\client"
     },
     {
       "name": "EnsembleApi",
-      "fileName": "go.exe",
-      "arguments": "run .",
+      "executable": "go",
+      "arguments": ["run", "."],
       "workingDirectory": "C:\\dev\\ensemble\\api"
     }
   ]

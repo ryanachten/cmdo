@@ -2,14 +2,14 @@
   "commands": [
     {
       "name": "EnsembleFrontend",
-      "fileName": "yarn.cmd",
-      "arguments": "run dev",
+      "executable": "yarn",
+      "arguments": ["run", "dev"],
       "workingDirectory": "C:\\dev\\ensemble\\client"
     },
     {
       "name": "EnsembleApi",
-      "fileName": "go.exe",
-      "arguments": "run .",
+      "executable": "go",
+      "arguments": ["run", "."],
       "workingDirectory": "C:\\dev\\ensemble\\api"
     }
   ]

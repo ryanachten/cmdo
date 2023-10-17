@@ -1,5 +1,5 @@
 param([switch]$kill)
-$ports = @(5173, 8080)
+$ports = @(3000, 5099, 5000, 11119, 5173, 8080)
 
 foreach ($port in $ports) {
     $connection = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
