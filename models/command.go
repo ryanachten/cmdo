@@ -13,6 +13,7 @@ type Command struct {
 	Executable       string   `json:"executable"`
 	Arguments        []string `json:"arguments"`
 	WorkingDirectory string   `json:"workingDirectory"`
+	Tags             []string `json:"tags"`
 }
 
 func (c Command) Create(commandColour color.Attribute) exec.Cmd {

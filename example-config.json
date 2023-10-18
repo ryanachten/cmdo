@@ -4,13 +4,15 @@
       "name": "EnsembleFrontend",
       "executable": "yarn",
       "arguments": ["run", "dev"],
-      "workingDirectory": "C:\\dev\\ensemble\\client"
+      "workingDirectory": "C:\\dev\\ensemble\\client",
+      "tags": ["frontend"]
     },
     {
       "name": "EnsembleApi",
       "executable": "go",
       "arguments": ["run", "."],
-      "workingDirectory": "C:\\dev\\ensemble\\api"
+      "workingDirectory": "C:\\dev\\ensemble\\api",
+      "tags": ["backend"]
     }
   ]
 }

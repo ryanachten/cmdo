@@ -16,20 +16,24 @@ import (
 var terminalColours = []color.Attribute{color.FgCyan, color.FgMagenta, color.FgGreen, color.FgBlue}
 
 func main() {
-	configPath, err := models.GetConfigurationPath()
+	arguments, err := models.GetArguments()
 	if err != nil {
 		log.Fatalln(err)
 	}
-	config, err := models.ParseConfigurationFile(configPath)
+	config, err := models.ParseConfigurationFile(arguments.ConfigurationPath)
 	if err != nil {
 		log.Fatalln(err)
+	}
+
+	commands := arguments.FilterCommands(config.Commands)
+	if len(commands) == 0 {
+		log.Fatalln("No commands selected using the provided arguments")
 	}
 
 	var waitGroup sync.WaitGroup
-
 	stopChannel := make(chan struct{})
 
-	for i, command := range config.Commands {
+	for i, command := range commands {
 		cmd := command.Create(terminalColours[i%len(terminalColours)])
 
 		go func(cmd *exec.Cmd) {
