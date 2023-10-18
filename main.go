@@ -9,7 +9,11 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+
+	"github.com/fatih/color"
 )
+
+var terminalColours = []color.Attribute{color.FgCyan, color.FgMagenta, color.FgGreen, color.FgBlue}
 
 func main() {
 	configPath, err := models.GetConfigurationPath()
@@ -25,8 +29,8 @@ func main() {
 
 	stopChannel := make(chan struct{})
 
-	for _, command := range config.Commands {
-		cmd := command.Create()
+	for i, command := range config.Commands {
+		cmd := command.Create(terminalColours[i%len(terminalColours)])
 
 		go func(cmd *exec.Cmd) {
 			defer waitGroup.Done()
