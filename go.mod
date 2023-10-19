@@ -2,7 +2,10 @@ module commando
 
 go 1.21
 
-require github.com/fatih/color v1.15.0
+require (
+	github.com/fatih/color v1.15.0
+	github.com/gorilla/websocket v1.5.0
+)
 
 require (
 	github.com/mattn/go-colorable v0.1.13 // indirect

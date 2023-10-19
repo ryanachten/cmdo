@@ -16,22 +16,43 @@ type Command struct {
 	Tags             []string `json:"tags"`
 }
 
-func (c Command) Create(commandColour color.Attribute) exec.Cmd {
+func (c Command) Create(commandColour color.Attribute, broadcastChannel BroadcastChannel) exec.Cmd {
 	cmd := exec.Command(c.Executable, c.Arguments...)
-	cmd.Stdout = &commandWriter{color: color.New(commandColour), writer: os.Stdout, commandName: c.Name}
-	cmd.Stderr = &commandWriter{color: color.New(color.FgRed), writer: os.Stderr, commandName: c.Name}
+
+	cmd.Stdout = &commandWriter{
+		color:            color.New(commandColour),
+		writer:           os.Stdout,
+		commandName:      c.Name,
+		broadcastChannel: broadcastChannel,
+	}
+	cmd.Stderr = &commandWriter{
+		color:       color.New(color.FgRed),
+		writer:      os.Stderr,
+		commandName: c.Name,
+	}
+
 	cmd.Dir = c.WorkingDirectory
+
 	return *cmd
 }
 
 // Formats standard output for each command
 type commandWriter struct {
-	color       *color.Color
-	commandName string
-	writer      io.Writer
+	color            *color.Color
+	commandName      string
+	writer           io.Writer
+	broadcastChannel BroadcastChannel
 }
 
+// Logs to both writer and broadcast channel
 func (cw *commandWriter) Write(p []byte) (n int, err error) {
-	cw.color.Fprintf(cw.writer, "[%s]: %s", cw.commandName, string(p))
+	message := string(p)
+
+	cw.color.Fprintf(cw.writer, "[%s]: %s", cw.commandName, message)
+	cw.broadcastChannel <- BroadcastMessage{
+		CommandName: cw.commandName,
+		MessageBody: message,
+	}
+
 	return len(p), nil
 }
