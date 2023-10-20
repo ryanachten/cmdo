@@ -1,0 +1,14 @@
+.content {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.container {
+    max-width: 50%;
+    min-width: 300px;
+}

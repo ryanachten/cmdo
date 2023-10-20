@@ -2,17 +2,10 @@
 <html lang="en">
   <head>
     <title>Commando</title>
+    <link rel="stylesheet" href="./static/css/main.css" />
+    <script src="static/js/main.js" type="module"></script>
   </head>
   <body>
-    <div id="output"></div>
-
-    <script>
-      const socket = new WebSocket("ws://localhost:1111/ws");
-
-      socket.onmessage = function (event) {
-        const outputDiv = document.getElementById("output");
-        outputDiv.innerHTML += event.data + "<br>";
-      };
-    </script>
+    <main id="content" class="content"></main>
   </body>
 </html>
