@@ -11,12 +11,15 @@ Supply a configuration file containing different commands you want to execute in
 ### Arguments
 
 ```bash
-go run .\main.go --config .\example-config.json --tags backend --exclusions EnsembleApi
+go run .\main.go --config .\example-config.json --tags backend --exclusions EnsembleApi --web=false
 ```
 
-- `--config` (required) - points to a configuration file using the schema described below
-- `--tags` (optional) - when defined, only commands _with_ supplied `tags` in their configuration will be run
-- `--exclusions` (optional) - when defined, only commands _without_ a supplied `name` in their configuration will be run
+| command        | required | type         | default | description                                                                     |
+| -------------- | -------- | ------------ | ------- | ------------------------------------------------------------------------------- |
+| `--config`     | true     | string       |         | points to a configuration file using the schema below                           |
+| `--tags`       | false    | string array | []      | when defined, only commands _with_ supplied `tags` in configuration will be run |
+| `--exclusions` | false    | string array | []      | when defined, only commands _without_ supplied `name` will be run               |
+| `--web`        | false    | bool         | true    | opts out of web view and only outputs using stdout and stderror                 |
 
 ### Configuration
 

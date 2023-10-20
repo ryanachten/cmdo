@@ -24,13 +24,17 @@ func main() {
 
 	var broadcastChannel = make(chan models.BroadcastMessage)
 
-	webServer := services.WebServer{
-		BroadcastChannel: broadcastChannel,
+	if arguments.UseWeb {
+		webServer := services.WebServer{
+			BroadcastChannel: broadcastChannel,
+		}
+		go webServer.Start()
 	}
-	go webServer.Start()
 
 	commander := services.Commander{
-		Commands: commands,
+		Commands:         commands,
+		BroadcastChannel: broadcastChannel,
+		UseWeb:           arguments.UseWeb,
 	}
-	commander.Start(broadcastChannel)
+	commander.Start()
 }

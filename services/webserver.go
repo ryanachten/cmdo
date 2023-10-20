@@ -2,8 +2,11 @@ package services
 
 import (
 	"commando/models"
+	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
+	"runtime"
 
 	"github.com/gorilla/websocket"
 )
@@ -15,6 +18,8 @@ type WebServer struct {
 func (ws WebServer) Start() {
 	http.HandleFunc("/", serveHome)
 	http.HandleFunc("/ws", ws.serveWebSockets)
+
+	openBrowser("http://localhost:1111")
 
 	err := http.ListenAndServe(":1111", nil)
 	if err != nil {
@@ -46,5 +51,23 @@ func (ws WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Reques
 			log.Println(err)
 			return
 		}
+	}
+}
+
+func openBrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Print(err)
 	}
 }

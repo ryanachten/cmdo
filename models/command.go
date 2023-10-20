@@ -16,7 +16,7 @@ type Command struct {
 	Tags             []string `json:"tags"`
 }
 
-func (c Command) Create(commandColour color.Attribute, broadcastChannel BroadcastChannel) exec.Cmd {
+func (c Command) Create(commandColour color.Attribute, broadcastChannel BroadcastChannel, useWeb bool) exec.Cmd {
 	cmd := exec.Command(c.Executable, c.Arguments...)
 
 	cmd.Stdout = &commandWriter{
@@ -24,11 +24,13 @@ func (c Command) Create(commandColour color.Attribute, broadcastChannel Broadcas
 		writer:           os.Stdout,
 		commandName:      c.Name,
 		broadcastChannel: broadcastChannel,
+		useWeb:           useWeb,
 	}
 	cmd.Stderr = &commandWriter{
 		color:       color.New(color.FgRed),
 		writer:      os.Stderr,
 		commandName: c.Name,
+		useWeb:      useWeb,
 	}
 
 	cmd.Dir = c.WorkingDirectory
@@ -42,6 +44,7 @@ type commandWriter struct {
 	commandName      string
 	writer           io.Writer
 	broadcastChannel BroadcastChannel
+	useWeb           bool
 }
 
 // Logs to both writer and broadcast channel
@@ -49,9 +52,11 @@ func (cw *commandWriter) Write(p []byte) (n int, err error) {
 	message := string(p)
 
 	cw.color.Fprintf(cw.writer, "[%s]: %s", cw.commandName, message)
-	cw.broadcastChannel <- BroadcastMessage{
-		CommandName: cw.commandName,
-		MessageBody: message,
+	if cw.useWeb {
+		cw.broadcastChannel <- BroadcastMessage{
+			CommandName: cw.commandName,
+			MessageBody: message,
+		}
 	}
 
 	return len(p), nil

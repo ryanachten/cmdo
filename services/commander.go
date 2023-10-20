@@ -15,20 +15,22 @@ import (
 var terminalColours = []color.Attribute{color.FgCyan, color.FgMagenta, color.FgGreen, color.FgBlue}
 
 type Commander struct {
-	Commands []models.Command
+	Commands         []models.Command
+	BroadcastChannel models.BroadcastChannel
+	UseWeb           bool
 }
 
-func (c Commander) Start(broadcastChannel models.BroadcastChannel) {
+func (c Commander) Start() {
 	var waitGroup sync.WaitGroup
 	stopChannel := make(chan struct{})
 
 	for i, command := range c.Commands {
-		cmd := command.Create(terminalColours[i%len(terminalColours)], broadcastChannel)
+		cmd := command.Create(terminalColours[i%len(terminalColours)], c.BroadcastChannel, c.UseWeb)
 
 		go func(cmd *exec.Cmd) {
 			defer waitGroup.Done()
 			defer close(stopChannel)
-			defer close(broadcastChannel)
+			defer close(c.BroadcastChannel)
 
 			err := cmd.Start()
 			if err != nil {
@@ -62,7 +64,7 @@ func (c Commander) Start(broadcastChannel models.BroadcastChannel) {
 	go func() {
 		waitGroup.Wait()
 		close(stopChannel)
-		close(broadcastChannel)
+		close(c.BroadcastChannel)
 	}()
 
 	// Handle signals to stop all processes (e.g., Ctrl+C).

@@ -10,6 +10,7 @@ type Arguments struct {
 	ConfigurationPath string
 	Tags              []string
 	Exclusions        []string
+	UseWeb            bool
 }
 
 // Parses command line arguments
@@ -23,6 +24,9 @@ func GetArguments() (*Arguments, error) {
 	var exclusions stringArray
 	flag.Var(&exclusions, "exclusions", "List of command names indicating which commands exclude as part of the commando execution")
 
+	var useWeb bool
+	flag.BoolVar(&useWeb, "web", true, "Opt out of displaying output using a web dashboard")
+
 	flag.Parse()
 
 	if configPath == "" {
@@ -33,6 +37,7 @@ func GetArguments() (*Arguments, error) {
 		ConfigurationPath: configPath,
 		Tags:              tags,
 		Exclusions:        exclusions,
+		UseWeb:            useWeb,
 	}
 
 	return &args, nil
