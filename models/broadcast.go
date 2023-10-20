@@ -1,8 +1,8 @@
 package models
 
 type BroadcastMessage struct {
-	CommandName string
-	MessageBody string
+	CommandName string `json:"commandName"`
+	MessageBody string `json:"messageBody"`
 }
 
 type BroadcastChannel = chan BroadcastMessage

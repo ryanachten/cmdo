@@ -11,45 +11,72 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// TODO: expose ports as configuration or environment variables
+const serverPort = "1111"
+const clientPort = "1112"
+
 type WebServer struct {
 	BroadcastChannel models.BroadcastChannel
 }
 
-func (ws WebServer) Start() {
-	http.HandleFunc("/", serveHome)
-	http.HandleFunc("/ws", ws.serveWebSockets)
+func (server WebServer) Start() {
+	// http.HandleFunc("/", serveHome)
+	http.HandleFunc("/ws", server.serveWebSockets)
 
-	openBrowser("http://localhost:1111")
+	go startClient()
 
-	err := http.ListenAndServe(":1111", nil)
+	err := http.ListenAndServe(":"+serverPort, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 }
 
-func serveHome(writer http.ResponseWriter, req *http.Request) {
-	http.ServeFile(writer, req, "views/index.html")
+// func serveHome(writer http.ResponseWriter, req *http.Request) {
+// 	http.ServeFile(writer, req, "views/index.html")
+// }
+
+func startClient() {
+	cmd := exec.Command("yarn", "dev")
+	cmd.Dir = "./client"
+
+	openBrowser("http://localhost:" + clientPort)
+
+	err := cmd.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true // TODO: look at a better solution than enabling all origins
+	},
 }
 
-func (ws WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Request) {
+var clients = make(map[*websocket.Conn]bool)
+
+func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Request) {
 	conn, err := upgrader.Upgrade(writer, req, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	defer conn.Close()
+	clients[conn] = true
 
 	for {
-		msg := <-ws.BroadcastChannel
-		err := conn.WriteJSON(msg)
-		if err != nil {
-			log.Println(err)
-			return
+		msg := <-server.BroadcastChannel
+		for client, connected := range clients {
+			if connected {
+				err := client.WriteJSON(msg)
+				if err != nil {
+					delete(clients, conn)
+					return
+				}
+			}
 		}
 	}
 }
