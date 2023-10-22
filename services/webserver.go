@@ -64,6 +64,7 @@ func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Re
 			if connected {
 				err := client.WriteJSON(msg)
 				if err != nil {
+					log.Println(err)
 					delete(clients, conn)
 					return
 				}

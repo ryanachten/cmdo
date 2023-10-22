@@ -1,5 +1,5 @@
 /**
- * @typedef {{commandName: string, messageBody: string}} Message
+ * @typedef {{commandName: string, messageBody: string, messageType: "error" | "information"}} Message
  */
 import { createMessageItem } from "./dom.js";
 
@@ -21,7 +21,6 @@ const handleSocketResponse = (event) => {
    * @type {Message}
    */
   const message = JSON.parse(event.data);
-  console.log("message", message);
   createMessageItem(message);
 };
 
