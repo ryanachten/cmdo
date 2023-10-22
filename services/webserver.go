@@ -64,7 +64,7 @@ func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Re
 			if connected {
 				err := client.WriteJSON(msg)
 				if err != nil {
-					log.Println(err)
+					log.Printf("Error sending JSON message: %v\n", err)
 					delete(clients, conn)
 					return
 				}
@@ -92,6 +92,6 @@ func openBrowser(url string) {
 		err = fmt.Errorf("unsupported platform")
 	}
 	if err != nil {
-		log.Print(err)
+		log.Printf("Error opening browser: %v\n", err)
 	}
 }

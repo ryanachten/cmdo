@@ -2,10 +2,17 @@
     --s-xsmall: 5px;
     --s-small: 10px;
     --s: 20px;
+    --s-large: 40px;
     --c-xdark: #0c0c0c;
     --c-dark: #222222;
-    --c-light: #333333;
+    --c-light: #616161;
     --c-white: #f2f2f2;
+    --c-cyan: #29c8eb;
+    --c-magenta: #e422ff;
+    --c-green: #18d112;
+    --c-blue: #638aff;
+    --c-red: #ff3d3d;
+
 }
 
 html {
@@ -32,15 +39,51 @@ html {
     background-color: var(--c-xdark);
     border-top-left-radius: var(--s-small);
     border-top-right-radius: var(--s-small);
+    color: var(--c-white);
     display: inline-block;
     padding: var(--s-small) var(--s) var(--s-small) var(--s-small);
     font-weight: bold;
+}
+.container__heading::before {
+    margin-right: var(--s-xsmall);
+}
+
+.container--cyan .container__heading::before {
+    content: "🚀";
+}
+
+.container--magenta .container__heading::before {
+    content: "⚡";
+}
+
+.container--green .container__heading::before {
+    content: "⚙️";
+}
+
+.container--blue .container__heading::before {
+    content: "💡";
+}
+
+.container--cyan {
+    color: var(--c-cyan);
+}
+
+.container--magenta {
+    color: var(--c-magenta);
+}
+
+.container--green {
+    color: var(--c-green);
+}
+
+.container--blue {
+    color: var(--c-blue);
 }
 
 .container ul {
     background-color: var(--c-dark);
     list-style: none;
-    padding: var(--s-small);
+    padding: 0;
     margin: 0;
     max-height: 300px;
     overflow-y: scroll;
@@ -49,10 +92,15 @@ html {
 .container li {
     text-wrap: pretty;
     word-wrap: break-word;
+    padding: var(--s-small);
+}
+
+.container li:nth-of-type(even) {
+    background: #252525;
 }
 
 .container li.error {
-    color: red;
+    color: var(--c-red);
 }
 
 @media only screen and (min-width: 800px) {
