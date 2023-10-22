@@ -2,6 +2,7 @@ package services
 
 import (
 	"commando/models"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,20 +12,29 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// TODO: expose ports as configuration or environment variables
+const serverPort = "1111"
+
+var history = make([]models.BroadcastMessage, 0)
+
 type WebServer struct {
 	BroadcastChannel models.BroadcastChannel
 }
 
-func (ws WebServer) Start() {
+func (server WebServer) Start() {
 	http.HandleFunc("/", serveHome)
-	http.HandleFunc("/ws", ws.serveWebSockets)
+	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./views/static"))))
 
-	openBrowser("http://localhost:1111")
+	http.HandleFunc("/api/history", server.serveHistory)
+	http.HandleFunc("/ws", server.serveWebSockets)
 
-	err := http.ListenAndServe(":1111", nil)
+	openBrowser("http://localhost:" + serverPort)
+
+	err := http.ListenAndServe(":"+serverPort, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 }
 
 func serveHome(writer http.ResponseWriter, req *http.Request) {
@@ -36,22 +46,36 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func (ws WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Request) {
+var clients = make(map[*websocket.Conn]bool)
+
+func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Request) {
 	conn, err := upgrader.Upgrade(writer, req, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	defer conn.Close()
+	clients[conn] = true
 
 	for {
-		msg := <-ws.BroadcastChannel
-		err := conn.WriteJSON(msg)
-		if err != nil {
-			log.Println(err)
-			return
+		msg := <-server.BroadcastChannel
+		history = append(history, msg)
+		for client, connected := range clients {
+			if connected {
+				err := client.WriteJSON(msg)
+				if err != nil {
+					log.Printf("Error sending JSON message: %v\n", err)
+					delete(clients, conn)
+					return
+				}
+			}
 		}
 	}
+}
+
+func (server WebServer) serveHistory(writer http.ResponseWriter, req *http.Request) {
+	writer.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(writer).Encode(history)
 }
 
 func openBrowser(url string) {
@@ -68,6 +92,6 @@ func openBrowser(url string) {
 		err = fmt.Errorf("unsupported platform")
 	}
 	if err != nil {
-		log.Print(err)
+		log.Printf("Error opening browser: %v\n", err)
 	}
 }

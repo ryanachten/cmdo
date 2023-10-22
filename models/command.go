@@ -1,7 +1,6 @@
 package models
 
 import (
-	"io"
 	"os"
 	"os/exec"
 
@@ -21,16 +20,17 @@ func (c Command) Create(commandColour color.Attribute, broadcastChannel Broadcas
 
 	cmd.Stdout = &commandWriter{
 		color:            color.New(commandColour),
-		writer:           os.Stdout,
+		isError:          false,
 		commandName:      c.Name,
 		broadcastChannel: broadcastChannel,
 		useWeb:           useWeb,
 	}
 	cmd.Stderr = &commandWriter{
-		color:       color.New(color.FgRed),
-		writer:      os.Stderr,
-		commandName: c.Name,
-		useWeb:      useWeb,
+		color:            color.New(color.FgRed),
+		isError:          true,
+		commandName:      c.Name,
+		broadcastChannel: broadcastChannel,
+		useWeb:           useWeb,
 	}
 
 	cmd.Dir = c.WorkingDirectory
@@ -42,7 +42,7 @@ func (c Command) Create(commandColour color.Attribute, broadcastChannel Broadcas
 type commandWriter struct {
 	color            *color.Color
 	commandName      string
-	writer           io.Writer
+	isError          bool
 	broadcastChannel BroadcastChannel
 	useWeb           bool
 }
@@ -50,10 +50,17 @@ type commandWriter struct {
 // Logs to both writer and broadcast channel
 func (cw *commandWriter) Write(p []byte) (n int, err error) {
 	message := string(p)
+	writer := os.Stdout
+	messageType := InformationMessage
+	if cw.isError {
+		writer = os.Stderr
+		messageType = ErrorMessage
+	}
 
-	cw.color.Fprintf(cw.writer, "[%s]: %s", cw.commandName, message)
+	cw.color.Fprintf(writer, "[%s]: %s", cw.commandName, message)
 	if cw.useWeb {
 		cw.broadcastChannel <- BroadcastMessage{
+			MessageType: messageType,
 			CommandName: cw.commandName,
 			MessageBody: message,
 		}
