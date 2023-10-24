@@ -1,0 +1,15 @@
+:root {
+    --s-xsmall: 5px;
+    --s-small: 10px;
+    --s: 20px;
+    --s-large: 40px;
+    --c-xdark: #0c0c0c;
+    --c-dark: #222222;
+    --c-light: #616161;
+    --c-white: #f2f2f2;
+    --c-cyan: #29c8eb;
+    --c-magenta: #e422ff;
+    --c-green: #18d112;
+    --c-blue: #638aff;
+    --c-red: #ff3d3d;
+}
