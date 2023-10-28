@@ -1,0 +1,41 @@
+.command__heading {
+    color: var(--c-white);
+    font-weight: bold;
+    text-wrap: nowrap;
+}
+
+.command__heading::before {
+    margin-right: var(--s-xsmall);
+}
+
+.command--cyan .command__heading::before {
+    content: "🚀";
+}
+
+.command--magenta .command__heading::before {
+    content: "⚡";
+}
+
+.command--green .command__heading::before {
+    content: "⚙️";
+}
+
+.command--blue .command__heading::before {
+    content: "💡";
+}
+
+.command--cyan {
+    color: var(--c-cyan);
+}
+
+.command--magenta {
+    color: var(--c-magenta);
+}
+
+.command--green {
+    color: var(--c-green);
+}
+
+.command--blue {
+    color: var(--c-blue);
+}

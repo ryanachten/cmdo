@@ -1,0 +1,7 @@
+.inline-view__item {
+    display: flex;
+}
+
+.inline-view__heading {
+    margin-right: var(--s);
+}

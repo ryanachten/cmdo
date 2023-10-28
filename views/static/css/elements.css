@@ -8,3 +8,24 @@ body {
     margin: 0;
     padding: var(--s);
 }
+
+ul {
+    background-color: var(--c-dark);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    text-wrap: pretty;
+    word-wrap: break-word;
+    padding: var(--s-small);
+}
+
+li:nth-of-type(even) {
+    background: #252525;
+}
+
+li.error {
+    color: var(--c-red);
+}

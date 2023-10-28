@@ -8,7 +8,7 @@ const commandColors = ["cyan", "magenta", "green", "blue"];
  * @param {{ commands: import('./App.js').CommandHash }}
  */
 function CommandView({ commands }) {
-  return html`<div className="content">
+  return html`<div className="command-view">
     ${Object.entries(commands).map(
       ([commandName, command], index) =>
         html`<${CommandList}
@@ -26,8 +26,8 @@ function CommandView({ commands }) {
 function CommandList({ commandName, messages, index }) {
   const color = commandColors[index % commandColors.length];
 
-  return html`<section className="container container--${color}">
-    <span className="container__heading">${commandName}</span>
+  return html`<section className="terminal__container command--${color}">
+    <span className="command__heading terminal__tab">${commandName}</span>
     <ul>
       ${messages.map((message) => html`<li>${message.messageBody}</li>`)}
     </ul>
