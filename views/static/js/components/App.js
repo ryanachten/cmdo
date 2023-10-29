@@ -3,6 +3,7 @@ import {
   useEffect,
   useState,
   useMemo,
+  useRef,
 } from "https://esm.sh/preact@10.18.1/hooks";
 import htm from "https://esm.sh/htm@3.1.1";
 
@@ -82,6 +83,8 @@ function App() {
     [history]
   );
 
+  const contentRef = useRef(null);
+
   return html`<div className="app">
     <aside className="app__sidebar">
       ${html`<${Logo} />`}
@@ -97,10 +100,14 @@ function App() {
         </select>
       </div>
     </aside>
-    <main className="app__content">
+    <main ref=${contentRef} className="app__content">
       ${viewMode === "command"
         ? html`<${CommandView} commands=${commands} />`
-        : html`<${InlineView} history=${history} commands=${commands} />}`}
+        : html`<${InlineView}
+              history=${history}
+              commands=${commands}
+              contentRef=${contentRef}
+            />}`}
     </main>
   </div> `;
 }

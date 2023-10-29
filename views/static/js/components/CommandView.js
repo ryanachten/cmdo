@@ -1,5 +1,6 @@
 import { h } from "https://esm.sh/preact@10.18.1";
 import htm from "https://esm.sh/htm@3.1.1";
+import { useEffect, useRef } from "https://esm.sh/preact@10.18.1/hooks";
 
 const html = htm.bind(h);
 const commandColors = ["cyan", "magenta", "green", "blue"];
@@ -25,12 +26,20 @@ function CommandView({ commands }) {
  */
 function CommandList({ commandName, messages, index }) {
   const color = commandColors[index % commandColors.length];
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    listRef.current.scroll({
+      behavior: "smooth",
+      top: listRef.current.scrollHeight,
+    });
+  }, [messages]);
 
   return html`<section
     className="terminal__container command-view__container command--${color}"
   >
     <span className="command__heading terminal__tab">${commandName}</span>
-    <ul>
+    <ul ref=${listRef}>
       ${messages.map(
         (message) =>
           html`<li
