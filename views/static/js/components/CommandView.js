@@ -26,10 +26,19 @@ function CommandView({ commands }) {
 function CommandList({ commandName, messages, index }) {
   const color = commandColors[index % commandColors.length];
 
-  return html`<section className="terminal__container command--${color}">
+  return html`<section
+    className="terminal__container command-view__container command--${color}"
+  >
     <span className="command__heading terminal__tab">${commandName}</span>
     <ul>
-      ${messages.map((message) => html`<li>${message.messageBody}</li>`)}
+      ${messages.map(
+        (message) =>
+          html`<li
+            className="${message.messageType === "error" ? "error" : ""}"
+          >
+            ${message.messageBody}
+          </li>`
+      )}
     </ul>
   </section>`;
 }

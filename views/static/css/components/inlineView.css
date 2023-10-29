@@ -1,3 +1,8 @@
+.inline-view {
+    display: flex;
+    justify-content: center;
+}
+
 .inline-view__item {
     display: flex;
 }

@@ -7,22 +7,24 @@ const html = htm.bind(h);
  * @param {{ history: import('./App.js').Message[], commands: import('./App.js').CommandHash[] }}
  */
 function InlineView({ history, commands }) {
-  return html`<div className="inline-view terminal__container">
-    <span className="terminal__tab">Commando</span>
-    <ul>
-      ${history.map(
-        ({ commandName, messageBody }) =>
-          html`<li
-            className="inline-view__item command--${commands[commandName]
-              .color}"
-          >
+  return html`<div className="inline-view">
+    <div className="terminal__container">
+      <span className="terminal__tab">Commando</span>
+      <ul>
+        ${history.map(({ commandName, messageBody, messageType }) => {
+          const className = `inline-view__item command--${
+            commands[commandName].color
+          } ${messageType === "error" ? "error" : ""}`;
+
+          return html`<li className="${className}">
             <span className="command__heading inline-view__heading"
               >${commandName}</span
             >
             ${messageBody}
-          </li>`
-      )}
-    </ul>
+          </li>`;
+        })}
+      </ul>
+    </div>
   </div>`;
 }
 

@@ -8,6 +8,7 @@ import htm from "https://esm.sh/htm@3.1.1";
 
 import CommandView from "./CommandView.js";
 import InlineView from "./InlineView.js";
+import Logo from "./Logo.js";
 import { BASE_URL, COMMAND_COLORS } from "../constants.js";
 
 const html = htm.bind(h);
@@ -20,7 +21,7 @@ const html = htm.bind(h);
 
 function App() {
   /**
-   * @type {[Message[], (Message[]) => Message[]]}
+   * @type {[Message[], (history) => Message[]]}
    */
   const [history, setHistory] = useState([]);
   /**
@@ -34,7 +35,14 @@ function App() {
      * @type {Message[]}
      */
     const json = await res.json();
-    setHistory((prevHistory) => [...prevHistory, ...json]);
+    const messages = json.filter((m) => {
+      m.messageBody = m.messageBody.trim();
+      if (!m.messageBody) return;
+
+      return m;
+    });
+
+    setHistory((prevHistory) => [...prevHistory, ...messages]);
   };
 
   const handleSocketResponse = (event) => {
@@ -42,6 +50,9 @@ function App() {
      * @type {Message}
      */
     const message = JSON.parse(event.data);
+    message.messageBody = message.messageBody.trim();
+    if (!message.messageBody) return;
+
     setHistory((prevHistory) => [...prevHistory, message]);
   };
 
@@ -54,6 +65,7 @@ function App() {
   /**
    * @type {CommandHash}
    */
+  // TODO: this is really inefficient - add command as own state updated only as needed
   const commands = useMemo(
     () =>
       history.reduce((aggregate, message) => {
@@ -70,15 +82,26 @@ function App() {
     [history]
   );
 
-  return html`<div class="app">
-    <label>Use inline view</label>
-    <input
-      type="checkbox"
-      onChange=${(e) => setViewMode(e.target.checked ? "inline" : "command")}
-    />
-    ${viewMode === "command"
-      ? html`<${CommandView} commands=${commands} />`
-      : html`<${InlineView} history=${history} commands=${commands} />}`}
+  return html`<div className="app">
+    <aside className="app__sidebar">
+      ${html`<${Logo} />`}
+      <div>
+        <label for="view-mode">View mode</label>
+        <select
+          id="view-mode"
+          value=${viewMode}
+          onChange=${(e) => setViewMode(e.target.value)}
+        >
+          <option value="command">Grid</option>
+          <option value="inline">Unified</option>
+        </select>
+      </div>
+    </aside>
+    <main className="app__content">
+      ${viewMode === "command"
+        ? html`<${CommandView} commands=${commands} />`
+        : html`<${InlineView} history=${history} commands=${commands} />}`}
+    </main>
   </div> `;
 }
 

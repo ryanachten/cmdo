@@ -6,7 +6,6 @@ html {
 
 body {
     margin: 0;
-    padding: var(--s);
 }
 
 ul {
@@ -18,8 +17,8 @@ ul {
 
 li {
     text-wrap: pretty;
-    word-wrap: break-word;
     padding: var(--s-small);
+    overflow-wrap: anywhere;
 }
 
 li:nth-of-type(even) {
