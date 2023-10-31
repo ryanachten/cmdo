@@ -2,7 +2,6 @@ import { h } from "https://esm.sh/preact@10.18.1";
 import {
   useEffect,
   useState,
-  useMemo,
   useRef,
 } from "https://esm.sh/preact@10.18.1/hooks";
 import htm from "https://esm.sh/htm@3.1.1";
@@ -26,9 +25,33 @@ function App() {
    */
   const [history, setHistory] = useState([]);
   /**
+   * @type {[CommandHash, (commands) => CommandHash]}
+   */
+  const [commands, setCommands] = useState({});
+  /**
    * @type {[ViewMode, () => ViewMode]}
    */
   const [viewMode, setViewMode] = useState("command");
+
+  /**
+   * @param {Message} message
+   */
+  const addMessageToCommands = (message) => {
+    setCommands((prevCommands) => {
+      const { commandName } = message;
+      const updatedCommands = { ...prevCommands };
+
+      if (commandName in updatedCommands) {
+        updatedCommands[commandName].history.push(message);
+      } else {
+        const index = Object.keys(updatedCommands).length;
+        const color = COMMAND_COLORS[index % COMMAND_COLORS.length];
+        updatedCommands[commandName] = { history: [message], color };
+      }
+
+      return updatedCommands;
+    });
+  };
 
   const getHistory = async () => {
     const res = await fetch(`http://${BASE_URL}/api/history`);
@@ -40,6 +63,7 @@ function App() {
       m.messageBody = m.messageBody.trim();
       if (!m.messageBody) return;
 
+      addMessageToCommands(m);
       return m;
     });
 
@@ -55,6 +79,7 @@ function App() {
     if (!message.messageBody) return;
 
     setHistory((prevHistory) => [...prevHistory, message]);
+    addMessageToCommands(message);
   };
 
   useEffect(() => {
@@ -62,26 +87,6 @@ function App() {
     const socket = new WebSocket(`ws://${BASE_URL}/ws`);
     socket.onmessage = handleSocketResponse;
   }, []);
-
-  /**
-   * @type {CommandHash}
-   */
-  // TODO: this is really inefficient - add command as own state updated only as needed
-  const commands = useMemo(
-    () =>
-      history.reduce((aggregate, message) => {
-        const { commandName } = message;
-        if (commandName in aggregate) {
-          aggregate[commandName].history.push(message);
-        } else {
-          const index = Object.keys(aggregate).length;
-          const color = COMMAND_COLORS[index % COMMAND_COLORS.length];
-          aggregate[commandName] = { history: [message], color };
-        }
-        return aggregate;
-      }, {}),
-    [history]
-  );
 
   const contentRef = useRef(null);
 

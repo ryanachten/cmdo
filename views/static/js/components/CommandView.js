@@ -2,8 +2,9 @@ import { h } from "https://esm.sh/preact@10.18.1";
 import htm from "https://esm.sh/htm@3.1.1";
 import { useEffect, useRef } from "https://esm.sh/preact@10.18.1/hooks";
 
+import MessageBody from "./MessageBody.js";
+
 const html = htm.bind(h);
-const commandColors = ["cyan", "magenta", "green", "blue"];
 
 /**
  * @param {{ commands: import('./App.js').CommandHash }}
@@ -11,21 +12,20 @@ const commandColors = ["cyan", "magenta", "green", "blue"];
 function CommandView({ commands }) {
   return html`<div className="command-view">
     ${Object.entries(commands).map(
-      ([commandName, command], index) =>
+      ([commandName, command]) =>
         html`<${CommandList}
           commandName=${commandName}
           messages=${command.history}
-          index=${index}
+          color=${command.color}
         />`
     )}
   </div>`;
 }
 
 /**
- * @param {{ commandName: string, messages: import('./App.js').Message[], index: number }}
+ * @param {{ commandName: string, messages: import('./App.js').Message[], color: string }}
  */
-function CommandList({ commandName, messages, index }) {
-  const color = commandColors[index % commandColors.length];
+function CommandList({ commandName, messages, color }) {
   const listRef = useRef(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ function CommandList({ commandName, messages, index }) {
       behavior: "smooth",
       top: listRef.current.scrollHeight,
     });
-  }, [messages]);
+  }, [messages.length]);
 
   return html`<section
     className="terminal__container command-view__container command--${color}"
@@ -45,7 +45,7 @@ function CommandList({ commandName, messages, index }) {
           html`<li
             className="${message.messageType === "error" ? "error" : ""}"
           >
-            ${message.messageBody}
+            <${MessageBody} messageBody=${message.messageBody} />
           </li>`
       )}
     </ul>
