@@ -1,0 +1,16 @@
+.terminal__tab {
+    background-color: var(--c-xdark);
+    border-top-left-radius: var(--s-small);
+    border-top-right-radius: var(--s-small);
+    display: inline-block;
+    font-weight: bold;
+    padding: var(--s-small) var(--s) var(--s-small) var(--s-small);
+}
+
+.terminal__container {
+    border-radius: var(--s-xsmall);
+    box-shadow:  0px 0px 30px var(--c-dark);
+    padding-top: var(--s-xsmall);
+    height: fit-content;
+    width: 100%;
+}

@@ -1,0 +1,12 @@
+.inline-view {
+    display: flex;
+    justify-content: center;
+}
+
+.inline-view__item {
+    display: flex;
+}
+
+.inline-view__heading {
+    margin-right: var(--s);
+}

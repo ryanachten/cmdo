@@ -1,4 +1,7 @@
 @import url("./variables.css");
 @import url("./elements.css");
-@import url("./components/content.css");
-@import url("./components/container.css");
+@import url("./components/command.css");
+@import url("./components/app.css");
+@import url("./components/terminal.css");
+@import url("./components/commandView.css");
+@import url("./components/inlineView.css");

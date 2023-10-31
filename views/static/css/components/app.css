@@ -1,0 +1,26 @@
+.app {
+    display: flex;
+}
+
+.app__sidebar {
+    background-color: var(--c-white);
+    color: var(--c-xdark);
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-large);
+}
+
+.app__logo {
+    margin-bottom: var(--s);
+    fill: var(--c-dark);
+    width: 125px;
+}
+
+.app__content {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: var(--s);
+}
