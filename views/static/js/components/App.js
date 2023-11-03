@@ -10,6 +10,7 @@ import CommandView from "./CommandView.js";
 import InlineView from "./InlineView.js";
 import Logo from "./Logo.js";
 import { BASE_URL, COMMAND_COLORS } from "../constants.js";
+import { useFilteredCommands, useFilteredHistory } from "../hooks.js";
 
 const html = htm.bind(h);
 
@@ -32,6 +33,14 @@ function App() {
    * @type {[ViewMode, () => ViewMode]}
    */
   const [viewMode, setViewMode] = useState("command");
+
+  /**
+   * @type {[string, () => string]}
+   */
+  const [searchTerm, setSearchTerm] = useState();
+
+  const filteredCommands = useFilteredCommands(searchTerm, commands);
+  const filteredHistory = useFilteredHistory(searchTerm, history);
 
   /**
    * @param {Message} message
@@ -94,25 +103,35 @@ function App() {
     <aside className="app__sidebar">
       ${html`<${Logo} />`}
       <div>
-        <label for="view-mode">View mode</label>
-        <select
-          id="view-mode"
-          value=${viewMode}
-          onChange=${(e) => setViewMode(e.target.value)}
-        >
-          <option value="command">Grid</option>
-          <option value="inline">Unified</option>
-        </select>
+        <div className="app__field">
+          <label for="view-mode">View mode</label>
+          <select
+            id="view-mode"
+            value=${viewMode}
+            onChange=${(e) => setViewMode(e.target.value)}
+          >
+            <option value="command">Grid</option>
+            <option value="inline">Unified</option>
+          </select>
+        </div>
+        <div className="app__field">
+          <label for="search-all-logs">Search</label>
+          <input
+            id="search-all-logs"
+            placeholder="search logs"
+            onChange=${(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
     </aside>
     <main ref=${contentRef} className="app__content">
       ${viewMode === "command"
-        ? html`<${CommandView} commands=${commands} />`
+        ? html`<${CommandView} commands=${filteredCommands} />`
         : html`<${InlineView}
-              history=${history}
-              commands=${commands}
-              contentRef=${contentRef}
-            />}`}
+            history=${filteredHistory}
+            commands=${commands}
+            contentRef=${contentRef}
+          />`}
     </main>
   </div> `;
 }

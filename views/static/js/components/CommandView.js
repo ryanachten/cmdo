@@ -1,8 +1,13 @@
 import { h } from "https://esm.sh/preact@10.18.1";
 import htm from "https://esm.sh/htm@3.1.1";
-import { useEffect, useRef } from "https://esm.sh/preact@10.18.1/hooks";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "https://esm.sh/preact@10.18.1/hooks";
 
 import MessageBody from "./MessageBody.js";
+import { useFilteredHistory } from "../hooks.js";
 
 const html = htm.bind(h);
 
@@ -27,20 +32,31 @@ function CommandView({ commands }) {
  */
 function CommandList({ commandName, messages, color }) {
   const listRef = useRef(null);
+  /**
+   * @type {[string, () => string]}
+   */
+  const [searchTerm, setSearchTerm] = useState();
+  const filteredMessages = useFilteredHistory(searchTerm, messages);
 
   useEffect(() => {
     listRef.current.scroll({
       behavior: "smooth",
       top: listRef.current.scrollHeight,
     });
-  }, [messages.length]);
+  }, [filteredMessages.length]);
 
   return html`<section
     className="terminal__container command-view__container command--${color}"
   >
-    <span className="command__heading terminal__tab">${commandName}</span>
+    <div className="terminal__header">
+      <span className="command__heading terminal__tab">${commandName}</span>
+      <input
+        placeholder="Search logs"
+        onChange=${(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
     <ul ref=${listRef}>
-      ${messages.map(
+      ${filteredMessages.map(
         (message) =>
           html`<li
             className="${message.messageType === "error" ? "error" : ""}"
@@ -49,6 +65,9 @@ function CommandList({ commandName, messages, color }) {
           </li>`
       )}
     </ul>
+    ${filteredMessages.length === 0
+      ? html`<div className="terminal__empty-state">No logs found</div>`
+      : ""}
   </section>`;
 }
 

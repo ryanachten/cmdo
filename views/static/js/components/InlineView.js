@@ -34,6 +34,9 @@ function InlineView({ history, commands, contentRef }) {
           </li>`;
         })}
       </ul>
+      ${history.length === 0
+        ? html`<div className="terminal__empty-state">No logs found</div>`
+        : ""}
     </div>
   </div>`;
 }

@@ -3,6 +3,7 @@
 }
 
 .app__sidebar {
+    align-items: center;
     background-color: var(--c-white);
     color: var(--c-xdark);
     display: flex;
@@ -14,6 +15,20 @@
     margin-bottom: var(--s);
     fill: var(--c-dark);
     width: 125px;
+}
+
+.app__field {
+    display: flex;
+    flex-flow: column;
+    margin-bottom: var(--s);
+}
+
+.app__field label {
+    color: var(--c-light);
+    margin-bottom: var(--s-xsmall);
+    text-transform: lowercase;
+    font-size: small;
+    font-weight: bold;
 }
 
 .app__content {

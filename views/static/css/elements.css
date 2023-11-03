@@ -28,3 +28,14 @@ li:nth-of-type(even) {
 li.error {
     color: var(--c-red);
 }
+
+input, select {
+    background-color: transparent;
+    border: solid 1px var(--c-light);
+    border-radius: 3px;
+    padding: var(--s-xsmall);
+}
+
+input::placeholder {
+    text-transform: lowercase;
+}
