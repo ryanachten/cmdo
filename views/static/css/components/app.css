@@ -4,15 +4,17 @@
 
 .app__sidebar {
     align-items: center;
-    background-color: var(--c-white);
-    color: var(--c-dark);
+    background-color: var(--c-dark);
+    box-shadow:  0px 0px 20px var(--c-dark);
+    color: var(--c-white);
     display: flex;
     flex-direction: column;
-    padding: var(--s-large);
+    padding: 30px;
 }
 
 
 .app__logo-img {
+    filter: invert();
     margin-bottom: var(--s-xsmall);
     width: 50px;
 }
@@ -40,7 +42,6 @@
 }
 
 .app__field-header {
-    color: var(--c-light);
     margin-bottom: var(--s-xsmall);
     text-transform: lowercase;
     font-size: small;
@@ -53,7 +54,7 @@
     min-height: 100vh;
     max-height: 100vh;
     overflow-y: auto;
-    padding: var(--s);
+    padding: var(--s-large);
 }
 
 .app__status {
