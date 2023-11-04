@@ -6,7 +6,10 @@
 
 .terminal__header input {
     height: fit-content;
+    flex-grow: 1;
     margin-right: var(--s);
+    max-width: 125px;
+    width: 0;
 }
 
 .terminal__tab {

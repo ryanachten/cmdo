@@ -5,25 +5,41 @@
 .app__sidebar {
     align-items: center;
     background-color: var(--c-white);
-    color: var(--c-xdark);
+    color: var(--c-dark);
     display: flex;
     flex-direction: column;
     padding: var(--s-large);
 }
 
+
+.app__logo-img {
+    margin-bottom: var(--s-xsmall);
+    width: 50px;
+}
+
 .app__logo {
-    margin-bottom: var(--s);
-    fill: var(--c-dark);
-    width: 125px;
+    font-size: larger;
+    font-weight: bold;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+}
+
+.app__controls {
+    border: 1px dotted var(--c-dark);
+    border-radius: var(--s-small);
+    padding: var(--s-small);
 }
 
 .app__field {
     display: flex;
     flex-flow: column;
+}
+
+.app__field:not(:last-child){
     margin-bottom: var(--s);
 }
 
-.app__field label {
+.app__field-header {
     color: var(--c-light);
     margin-bottom: var(--s-xsmall);
     text-transform: lowercase;
@@ -38,4 +54,26 @@
     max-height: 100vh;
     overflow-y: auto;
     padding: var(--s);
+}
+
+.app__status {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.app__status--error {
+    color: var(--c-red);
+}
+
+.app__status-count {
+    font-size: small;
+    margin-bottom: var(--s-xsmall);
+    text-transform: uppercase;
+}
+
+.app__status-value {
+    font-size: medium;
+    font-weight: bold;
+    margin-right: var(--s-xsmall);
 }

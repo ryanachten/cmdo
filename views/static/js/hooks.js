@@ -36,3 +36,21 @@ export const useFilteredHistory = (searchTerm, history) =>
       cmd.messageBody.toLowerCase().includes(term)
     );
   }, [searchTerm, history]);
+
+/**
+ * @param {import('./components/App.js').Message[]} history
+ * @returns {Object<string, number>}
+ */
+export const useMessageStatusCount = (history) =>
+  useMemo(
+    () =>
+      history.reduce((statuses, { messageType }) => {
+        if (messageType in statuses) {
+          statuses[messageType]++;
+        } else {
+          statuses[messageType] = 1;
+        }
+        return statuses;
+      }, {}),
+    [history]
+  );

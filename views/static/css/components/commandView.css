@@ -1,7 +1,7 @@
 .command-view {
     display: grid;
     grid-gap: var(--s);
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
     justify-items: center;
 }
 

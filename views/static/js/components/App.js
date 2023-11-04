@@ -8,15 +8,19 @@ import htm from "https://esm.sh/htm@3.1.1";
 
 import CommandView from "./CommandView.js";
 import InlineView from "./InlineView.js";
-import Logo from "./Logo.js";
 import { BASE_URL, COMMAND_COLORS } from "../constants.js";
-import { useFilteredCommands, useFilteredHistory } from "../hooks.js";
+import {
+  useFilteredCommands,
+  useFilteredHistory,
+  useMessageStatusCount,
+} from "../hooks.js";
 
 const html = htm.bind(h);
 
 /**
  * @typedef {"command" | "inline"} ViewMode
- * @typedef {{commandName: string, messageBody: string, messageType: "error" | "information"}} Message
+ * @typedef {"error" | "information"} MessageType
+ * @typedef {{commandName: string, messageBody: string, messageType: MessageType}} Message
  * @typedef {Object.<string, {history: Message[], color: string}>} CommandHash
  */
 
@@ -41,6 +45,7 @@ function App() {
 
   const filteredCommands = useFilteredCommands(searchTerm, commands);
   const filteredHistory = useFilteredHistory(searchTerm, history);
+  const statusCount = useMessageStatusCount(filteredHistory);
 
   /**
    * @param {Message} message
@@ -101,10 +106,30 @@ function App() {
 
   return html`<div className="app">
     <aside className="app__sidebar">
-      ${html`<${Logo} />`}
-      <div>
+      <img
+        className="app__logo-img"
+        alt="Commando logo"
+        src="/static/img/commando.png"
+      />
+      <span className="app__logo">Commando</span>
+      <hr />
+      <span className="app__field-header">Status</span>
+      <section className="app__status">
+        <div className="app__status-count">
+          <span className="app__status-value"
+            >${statusCount.information ?? 0}</span
+          >
+          stdin
+        </div>
+        <div className="app__status-count app__status--error">
+          <span className="app__status-value">${statusCount.error ?? 0}</span>
+          stderr
+        </div>
+      </section>
+      <hr />
+      <section>
         <div className="app__field">
-          <label for="view-mode">View mode</label>
+          <label className="app__field-header" for="view-mode">View mode</label>
           <select
             id="view-mode"
             value=${viewMode}
@@ -115,14 +140,16 @@ function App() {
           </select>
         </div>
         <div className="app__field">
-          <label for="search-all-logs">Search</label>
+          <label className="app__field-header" for="search-all-logs"
+            >Search</label
+          >
           <input
             id="search-all-logs"
             placeholder="search logs"
             onChange=${(e) => setSearchTerm(e.target.value)}
           />
         </div>
-      </div>
+      </section>
     </aside>
     <main ref=${contentRef} className="app__content">
       ${viewMode === "command"

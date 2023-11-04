@@ -6,7 +6,6 @@ import {
   useState,
 } from "https://esm.sh/preact@10.18.1/hooks";
 
-import MessageBody from "./MessageBody.js";
 import { useFilteredHistory } from "../hooks.js";
 
 const html = htm.bind(h);
@@ -61,7 +60,7 @@ function CommandList({ commandName, messages, color }) {
           html`<li
             className="${message.messageType === "error" ? "error" : ""}"
           >
-            <${MessageBody} messageBody=${message.messageBody} />
+            ${message.messageBody}
           </li>`
       )}
     </ul>

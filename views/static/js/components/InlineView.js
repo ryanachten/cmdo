@@ -2,8 +2,6 @@ import { h } from "https://esm.sh/preact@10.18.1";
 import htm from "https://esm.sh/htm@3.1.1";
 import { useEffect } from "https://esm.sh/preact@10.18.1/hooks";
 
-import MessageBody from "./MessageBody.js";
-
 const html = htm.bind(h);
 
 /**
@@ -30,7 +28,7 @@ function InlineView({ history, commands, contentRef }) {
             <span className="command__heading inline-view__heading"
               >${commandName}</span
             >
-            <${MessageBody} messageBody=${messageBody} />
+            ${messageBody}
           </li>`;
         })}
       </ul>
