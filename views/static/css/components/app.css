@@ -20,10 +20,9 @@
 }
 
 .app__logo {
-    font-size: larger;
+    font-size: x-large;
     font-weight: bold;
-    letter-spacing: -2px;
-    text-transform: uppercase;
+    letter-spacing: -1px;
 }
 
 .app__controls {
@@ -77,4 +76,14 @@
     font-size: medium;
     font-weight: bold;
     margin-right: var(--s-xsmall);
+}
+
+@media only screen and (max-width: 800px) {
+    .app {
+        flex-flow: row wrap;
+    }
+
+    .app__sidebar {
+        flex-flow: row wrap;
+    }
 }

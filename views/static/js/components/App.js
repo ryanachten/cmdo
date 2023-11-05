@@ -12,8 +12,8 @@ import { BASE_URL, COMMAND_COLORS } from "../constants.js";
 import {
   useFilteredCommands,
   useFilteredHistory,
-  useMessageStatusCount,
-} from "../hooks.js";
+  formatMessageBody,
+} from "../helpers.js";
 
 const html = htm.bind(h);
 
@@ -45,7 +45,6 @@ function App() {
 
   const filteredCommands = useFilteredCommands(searchTerm, commands);
   const filteredHistory = useFilteredHistory(searchTerm, history);
-  const statusCount = useMessageStatusCount(filteredHistory);
 
   /**
    * @param {Message} message
@@ -74,7 +73,7 @@ function App() {
      */
     const json = await res.json();
     const messages = json.filter((m) => {
-      m.messageBody = m.messageBody.trim();
+      m.messageBody = formatMessageBody(m.messageBody);
       if (!m.messageBody) return;
 
       addMessageToCommands(m);
@@ -89,7 +88,7 @@ function App() {
      * @type {Message}
      */
     const message = JSON.parse(event.data);
-    message.messageBody = message.messageBody.trim();
+    message.messageBody = formatMessageBody(message.messageBody);
     if (!message.messageBody) return;
 
     setHistory((prevHistory) => [...prevHistory, message]);
@@ -106,26 +105,7 @@ function App() {
 
   return html`<div className="app">
     <aside className="app__sidebar">
-      <img
-        className="app__logo-img"
-        alt="Commando logo"
-        src="/static/img/commando.png"
-      />
-      <span className="app__logo">Commando</span>
-      <hr />
-      <span className="app__field-header">Status</span>
-      <section className="app__status">
-        <div className="app__status-count">
-          <span className="app__status-value"
-            >${statusCount.information ?? 0}</span
-          >
-          stdin
-        </div>
-        <div className="app__status-count app__status--error">
-          <span className="app__status-value">${statusCount.error ?? 0}</span>
-          stderr
-        </div>
-      </section>
+      <span className="app__logo">cmdo</span>
       <hr />
       <section>
         <div className="app__field">

@@ -38,19 +38,9 @@ export const useFilteredHistory = (searchTerm, history) =>
   }, [searchTerm, history]);
 
 /**
- * @param {import('./components/App.js').Message[]} history
- * @returns {Object<string, number>}
+ * Removes all ASCII escape strings from terminal output
+ * @param {string} rawString
+ * @returns {string}
  */
-export const useMessageStatusCount = (history) =>
-  useMemo(
-    () =>
-      history.reduce((statuses, { messageType }) => {
-        if (messageType in statuses) {
-          statuses[messageType]++;
-        } else {
-          statuses[messageType] = 1;
-        }
-        return statuses;
-      }, {}),
-    [history]
-  );
+export const formatMessageBody = (rawString) =>
+  rawString.replace(/\u001b\[\d+m/g, "").trim();

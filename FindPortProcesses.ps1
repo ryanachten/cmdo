@@ -12,6 +12,7 @@ foreach ($port in $ports) {
 
         $pidNumber = [regex]::match($firstMatch, $pidNumberPattern).Value
 
+        Write-Host "Process found running on port $port"
         if($kill) {
             taskkill /pid $pidNumber /f
         }

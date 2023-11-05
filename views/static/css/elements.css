@@ -42,7 +42,7 @@ option {
 }
 
 input::placeholder {
-    color: var(--c-dark);
+    color: var(--c-light);
     text-transform: lowercase;
 }
 

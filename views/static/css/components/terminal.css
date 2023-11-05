@@ -5,6 +5,7 @@
 }
 
 .terminal__header input {
+    color: var(--c-dark);
     height: fit-content;
     flex-grow: 1;
     margin-right: var(--s);
@@ -25,7 +26,7 @@
 .terminal__container {
     background-color: var(--c-white);
     border-radius: var(--s-xsmall);
-    box-shadow:  0px 0px 10px var(--c-white);
+    box-shadow:  0px 0px 10px var(--c-dark);
     overflow: hidden;
     height: fit-content;
     width: 100%;

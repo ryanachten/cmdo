@@ -6,7 +6,7 @@ import {
   useState,
 } from "https://esm.sh/preact@10.18.1/hooks";
 
-import { useFilteredHistory } from "../hooks.js";
+import { useFilteredHistory } from "../helpers.js";
 
 const html = htm.bind(h);
 

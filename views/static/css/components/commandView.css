@@ -1,6 +1,6 @@
 .command-view {
     display: grid;
-    grid-gap: var(--s);
+    grid-gap: var(--s-large);
     grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
     justify-items: center;
 }
@@ -12,6 +12,6 @@
 
 @media only screen and (min-width: 800px) {
   .command-view__container ul {
-    max-height: calc(100vh - var(--s) * 5);
+    max-height: calc(100vh - var(--s-large) * 4);
   }
 }
