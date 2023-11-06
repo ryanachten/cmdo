@@ -1,7 +1,7 @@
 package services
 
 import (
-	"commando/models"
+	"cmdo/models"
 	"encoding/json"
 	"fmt"
 	"log"

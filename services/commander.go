@@ -1,7 +1,7 @@
 package services
 
 import (
-	"commando/models"
+	"cmdo/models"
 	"fmt"
 	"os"
 	"os/exec"

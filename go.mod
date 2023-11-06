@@ -1,4 +1,4 @@
-module commando
+module cmdo
 
 go 1.21
 

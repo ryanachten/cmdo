@@ -16,13 +16,13 @@ type Arguments struct {
 // Parses command line arguments
 func GetArguments() (*Arguments, error) {
 	var configPath string
-	flag.StringVar(&configPath, "config", "", "Path for commando configuration file")
+	flag.StringVar(&configPath, "config", "", "Path for cmdo configuration file")
 
 	var tags stringArray
-	flag.Var(&tags, "tags", "List of tags indicating which commands include as part of the commando execution")
+	flag.Var(&tags, "tags", "List of tags indicating which commands include as part of the cmdo execution")
 
 	var exclusions stringArray
-	flag.Var(&exclusions, "exclusions", "List of command names indicating which commands exclude as part of the commando execution")
+	flag.Var(&exclusions, "exclusions", "List of command names indicating which commands exclude as part of the cmdo execution")
 
 	var useWeb bool
 	flag.BoolVar(&useWeb, "web", true, "Opt out of displaying output using a web dashboard")

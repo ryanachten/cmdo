@@ -7,7 +7,7 @@
         {
             "name": "Run and debug",
             "type": "go",
-            "args": ["--config", ".\\example-config.json"],
+            "args": ["--config", ".\\examples\\ensemble.cmdo.json"],
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}"

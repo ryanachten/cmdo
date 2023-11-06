@@ -1,8 +1,8 @@
 package main
 
 import (
-	"commando/models"
-	"commando/services"
+	"cmdo/models"
+	"cmdo/services"
 	"log"
 )
 
