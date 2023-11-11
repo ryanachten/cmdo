@@ -8,10 +8,7 @@ import (
 )
 
 func main() {
-	arguments, err := models.GetArguments()
-	if err != nil {
-		log.Fatalln(err)
-	}
+	arguments := models.GetArguments()
 
 	config, err := models.ParseConfigurationFile(arguments.ConfigurationPath)
 	if err != nil {

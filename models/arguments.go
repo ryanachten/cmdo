@@ -1,8 +1,8 @@
 package models
 
 import (
-	"errors"
 	"flag"
+	"os"
 	"slices"
 )
 
@@ -14,7 +14,7 @@ type Arguments struct {
 }
 
 // Parses command line arguments
-func GetArguments() (*Arguments, error) {
+func GetArguments() *Arguments {
 	var configPath string
 	flag.StringVar(&configPath, "config", "", "Path for cmdo configuration file")
 
@@ -30,7 +30,11 @@ func GetArguments() (*Arguments, error) {
 	flag.Parse()
 
 	if configPath == "" {
-		return nil, errors.New("set --config flag with a path to the configuration file")
+		println("Missing -config flag with path to configuration file.\n")
+		println("cmdo usage:")
+		flag.PrintDefaults()
+		os.Exit(1)
+		return nil
 	}
 
 	args := Arguments{
@@ -40,7 +44,7 @@ func GetArguments() (*Arguments, error) {
 		UseWeb:            useWeb,
 	}
 
-	return &args, nil
+	return &args
 }
 
 // Filters commands using command line arguments
