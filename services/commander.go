@@ -1,7 +1,6 @@
 package services
 
 import (
-	"cmdo/models"
 	"fmt"
 	"os"
 	"os/exec"
@@ -10,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/fatih/color"
+	"github.com/ryanachten/cmdo/models"
 )
 
 var terminalColours = []color.Attribute{color.FgCyan, color.FgMagenta, color.FgGreen, color.FgBlue}

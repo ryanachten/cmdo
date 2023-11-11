@@ -1,7 +1,6 @@
 package services
 
 import (
-	"cmdo/models"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -10,6 +9,7 @@ import (
 	"runtime"
 
 	"github.com/gorilla/websocket"
+	"github.com/ryanachten/cmdo/models"
 )
 
 // TODO: expose ports as configuration or environment variables

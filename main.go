@@ -1,9 +1,10 @@
 package main
 
 import (
-	"cmdo/models"
-	"cmdo/services"
 	"log"
+
+	"github.com/ryanachten/cmdo/models"
+	"github.com/ryanachten/cmdo/services"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module cmdo
+module github.com/ryanachten/cmdo
 
 go 1.21
 
