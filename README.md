@@ -12,10 +12,20 @@ Supply a configuration file containing different commands you want to execute in
 
 #### Via Go (recommended)
 
+The simplest way to use and stay up to date with the latest version of cmdo is to retrieve the latest version via a go installation.
+
+This automatically adds it to your path for use:
+
 ```bash
 go install github.com/ryanachten/cmdo@main # install latest from main branch
 cmdo --config .\example-config.json # use cmdo!
 ```
+
+#### Release builds
+
+If you prefer using prebuilt executables, the latest release can be downloaded from [GitHub](https://github.com/ryanachten/cmdo/releases).
+
+You'll need to add this to your path yourself and download the latest release to receive updates.
 
 ### Arguments
 
