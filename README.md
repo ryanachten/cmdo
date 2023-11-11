@@ -8,10 +8,19 @@
 
 Supply a configuration file containing different commands you want to execute in parallel
 
+### Installation
+
+#### Via Go (recommended)
+
+```bash
+go install github.com/ryanachten/cmdo@main # install latest from main branch
+cmdo --config .\example-config.json # use cmdo!
+```
+
 ### Arguments
 
 ```bash
-go run .\main.go --config .\example-config.json --tags backend --exclusions EnsembleApi --web=false
+cmdo --config .\example-config.json --tags backend --exclusions EnsembleApi --web=false
 ```
 
 | command        | required | type     | default | description                                                                     |
@@ -60,4 +69,17 @@ One example using the [ensemble](https://github.com/ryanachten/ensemble) project
     }
   ]
 }
+```
+
+## Development
+
+### Prerequisites
+
+- Go installed locally (>v1.21)
+
+### Running locally
+
+```bash
+# from project root directory
+go run . --config .\examples\ensemble.cmdo.json
 ```
