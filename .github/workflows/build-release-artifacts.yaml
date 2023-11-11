@@ -7,8 +7,8 @@ permissions:
   packages: write
 
 jobs:
-  release-windows-386:
-    name: release windows/386
+  build-windows-386:
+    name: build windows/386
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
