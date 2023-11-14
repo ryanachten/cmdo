@@ -85,6 +85,18 @@ One example using the [ensemble](https://github.com/ryanachten/ensemble) project
 
 ## Development
 
+### Architecture
+
+![cmdo model](./docs/cmdo_model.png)
+
+Link for diagram on [excalidraw](https://excalidraw.com/#json=oVgLzyqIu9KQF76ZJrKBO,dls8gu58817lzBWWn0tG9w).
+
+cmdo is comprised of two main parts; a command runner (`commander` in the diagram above), which executes different `command`s based on the commands defined in `configuration`.
+
+The output from each `command` is piped both to stdout/stderr but also broadcasted via the `webserver` using websockets. The commando output is also stored `history` so that the command output can be loaded on refresh.
+
+A web app consuming websocket output is served by cmdo. This intentionally uses a no-build process to keep the dev experience simple. Preact, JS modules, JSDoc and CSS imports are used in favour of alternatives requiring a frontend build step. The web app provides different view and searching capabilities not found in the CLI tool alone.
+
 ### Prerequisites
 
 - Go installed locally (>v1.21)
