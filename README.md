@@ -40,6 +40,8 @@ cmdo --config .\example-config.json --tags backend --exclusions EnsembleApi --we
 | `--exclusions` | false    | string[] | []      | when defined, only commands _without_ supplied `name` will be run               |
 | `--web`        | false    | bool     | true    | opts out of web view and only outputs using stdout and stderror                 |
 
+![unified view](./docs/cmdo_unified.jpg)
+
 ### Configuration
 
 The configuration file must conform to the following API:
