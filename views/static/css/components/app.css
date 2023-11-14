@@ -5,8 +5,8 @@
 .app__sidebar {
     align-items: center;
     background-color: var(--c-dark);
-    box-shadow:  0px 0px 20px var(--c-dark);
-    color: var(--c-white);
+    box-shadow:  0px 0px 20px var(--c-shadows);
+    color: var(--c-text);
     display: flex;
     flex-direction: column;
     padding: 30px;
@@ -16,6 +16,14 @@
 .app__logo-img {
     filter: invert();
     margin-bottom: var(--s-xsmall);
+    width: 50px;
+}
+
+.app__logo--image {
+    background-image: url(/static/img/cmdo_logo.png);
+    background-position: center;
+    background-size: cover;
+    height: 50px;
     width: 50px;
 }
 
@@ -34,6 +42,14 @@
 .app__field {
     display: flex;
     flex-flow: column;
+}
+
+.app__field--inline {
+    flex-flow: row;
+}
+
+.app__field--inline .app__field-header {
+    margin-right: var(--s-small);
 }
 
 .app__field:not(:last-child){

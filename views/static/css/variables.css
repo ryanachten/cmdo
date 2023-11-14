@@ -1,4 +1,4 @@
-:root {
+html {
     --s-xsmall: 5px;
     --s-small: 10px;
     --s: 20px;
@@ -12,4 +12,17 @@
     --c-green: #18d112;
     --c-blue: #638aff;
     --c-red: #ff3d3d;
+    --c-text: var(--c-white);
+    --c-shadows: var(--c-dark);
+    --c-background: var(--c-light);
+}
+
+html[data-theme='light'] {
+    --c-xdark: #0c0c0c;
+    --c-dark: #e5e0e0;
+    --c-light: #a8a8a8;
+    --c-white: #e7e7e7;
+    --c-text: var(--c-xdark);
+    --c-shadows: #222222;
+    --c-background: var(--c-white);
 }

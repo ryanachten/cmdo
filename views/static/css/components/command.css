@@ -1,6 +1,4 @@
 .command__heading {
-    color: var(--c-white);
-    font-weight: bold;
     text-wrap: nowrap;
 }
 

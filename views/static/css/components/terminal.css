@@ -5,7 +5,7 @@
 }
 
 .terminal__header input {
-    color: var(--c-dark);
+    color: var(--c-text);
     height: fit-content;
     flex-grow: 1;
     margin-right: var(--s);
@@ -17,6 +17,7 @@
     background-color: var(--c-xdark);
     border-top-left-radius: var(--s-small);
     border-top-right-radius: var(--s-small);
+    color: var(--c-white);
     display: inline-block;
     font-weight: bold;
     margin-top: var(--s-xsmall);
@@ -26,7 +27,7 @@
 .terminal__container {
     background-color: var(--c-white);
     border-radius: var(--s-xsmall);
-    box-shadow:  0px 0px 10px var(--c-dark);
+    box-shadow:  0px 0px 10px var(--c-shadows);
     overflow: hidden;
     height: fit-content;
     width: 100%;

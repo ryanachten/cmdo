@@ -43,6 +43,11 @@ function App() {
    */
   const [searchTerm, setSearchTerm] = useState();
 
+  /**
+   * @type {[boolean, () => boolean]}
+   */
+  const [darkMode, setDarkMode] = useState(true);
+
   const filteredCommands = useFilteredCommands(searchTerm, commands);
   const filteredHistory = useFilteredHistory(searchTerm, history);
 
@@ -101,10 +106,15 @@ function App() {
     socket.onmessage = handleSocketResponse;
   }, []);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = darkMode ? "dark" : "light";
+  }, [darkMode]);
+
   const contentRef = useRef(null);
 
   return html`<div className="app">
     <aside className="app__sidebar">
+      <span className="app__logo--image"></span>
       <span className="app__logo">cmdo</span>
       <hr />
       <section>
@@ -118,6 +128,15 @@ function App() {
             <option value="command">Grid</option>
             <option value="inline">Unified</option>
           </select>
+        </div>
+        <div className="app__field app__field--inline">
+          <label className="app__field-header" for="dark-mode">Dark mode</label>
+          <input
+            type="checkbox"
+            id="dark-mode"
+            checked=${darkMode}
+            onChange=${(e) => setDarkMode(e.target.checked)}
+          />
         </div>
         <div className="app__field">
           <label className="app__field-header" for="search-all-logs"
