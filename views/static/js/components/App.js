@@ -117,7 +117,7 @@ function App() {
       <span className="app__logo--image"></span>
       <span className="app__logo">cmdo</span>
       <hr />
-      <section>
+      <section className="app__fields">
         <div className="app__field">
           <label className="app__field-header" for="view-mode">View mode</label>
           <select

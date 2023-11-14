@@ -99,7 +99,25 @@
         flex-flow: row wrap;
     }
 
+    .app__logo--image {
+        margin-right: var(--s-small);
+    }
+
     .app__sidebar {
         flex-flow: row wrap;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .app__fields {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .app__field {
+        height: fit-content;
+        margin: var(--s-small);
     }
 }
