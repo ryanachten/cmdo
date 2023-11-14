@@ -89,7 +89,7 @@ One example using the [ensemble](https://github.com/ryanachten/ensemble) project
 
 ![cmdo model](./docs/cmdo_model.png)
 
-Link for diagram on [excalidraw](https://excalidraw.com/#json=oVgLzyqIu9KQF76ZJrKBO,dls8gu58817lzBWWn0tG9w).
+Link for diagram on [excalidraw](https://excalidraw.com/#json=YE2cqmnn_FIxk8QtD0N2j,xWh6zPEesMg6VNe25SsYcg).
 
 cmdo is comprised of two main parts; a command runner (`commander` in the diagram above), which executes different `command`s based on the commands defined in `configuration`.
 
