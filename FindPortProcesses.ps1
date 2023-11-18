@@ -1,5 +1,5 @@
 param([switch]$kill)
-$ports = @(3000, 5099, 5000, 11119, 5173, 8080, 1111, 1112, 1113, 1114, 1115)
+$ports = @(3000, 5099, 5000, 11119, 5173, 8080, 1111)
 
 foreach ($port in $ports) {
     $foundProcesses = netstat -ano | findstr :$port
@@ -12,7 +12,7 @@ foreach ($port in $ports) {
 
         $pidNumber = [regex]::match($firstMatch, $pidNumberPattern).Value
 
-        Write-Host "Process found running on port $port"
+        Write-Host "Process found running on port $port - Pid: $pidNumber"
         if($kill) {
             taskkill /pid $pidNumber /f
         }

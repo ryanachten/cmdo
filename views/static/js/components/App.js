@@ -8,7 +8,7 @@ import htm from "https://esm.sh/htm@3.1.1";
 
 import CommandView from "./CommandView.js";
 import InlineView from "./InlineView.js";
-import { BASE_URL, COMMAND_COLORS } from "../constants.js";
+import { BASE_API_URL, BASE_WS_URL, COMMAND_COLORS } from "../constants.js";
 import {
   useFilteredCommands,
   useFilteredHistory,
@@ -72,7 +72,7 @@ function App() {
   };
 
   const getHistory = async () => {
-    const res = await fetch(`http://${BASE_URL}/api/history`);
+    const res = await fetch(`${BASE_API_URL}/history`);
     /**
      * @type {Message[]}
      */
@@ -102,7 +102,7 @@ function App() {
 
   useEffect(() => {
     getHistory();
-    const socket = new WebSocket(`ws://${BASE_URL}/ws`);
+    const socket = new WebSocket(BASE_WS_URL);
     socket.onmessage = handleSocketResponse;
   }, []);
 

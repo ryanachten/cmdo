@@ -1,8 +1,28 @@
 .command-view {
     display: grid;
     grid-gap: var(--s-large);
-    grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     justify-items: center;
+}
+
+.command-view__heading-inputs {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--s);
+  width: 100%;
+}
+
+.command-view__heading-inputs input {
+  flex-grow: 1;
+  margin-right: var(--s-small);
+}
+
+.command-view__stop-button {
+  border: 2px solid var(--c-red);
+  background-color: var(--c-red);
+  border-radius: 3px;
+  color: var(--c-white);
+  font-weight: bold;
 }
 
 .command-view__container ul {

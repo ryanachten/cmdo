@@ -20,19 +20,22 @@ func main() {
 		log.Fatalln("No commands selected using the provided arguments")
 	}
 
-	var broadcastChannel = make(chan models.BroadcastMessage)
+	var broadcastChannel = make(models.BroadcastChannel)
+	var commandRequestChannel = make(models.CommandRequestChannel)
 
 	if arguments.UseWeb {
 		webServer := services.WebServer{
-			BroadcastChannel: broadcastChannel,
+			BroadcastChannel:      broadcastChannel,
+			CommandRequestChannel: commandRequestChannel,
 		}
 		go webServer.Start()
 	}
 
 	commander := services.Commander{
-		Commands:         commands,
-		BroadcastChannel: broadcastChannel,
-		UseWeb:           arguments.UseWeb,
+		Commands:              commands,
+		BroadcastChannel:      broadcastChannel,
+		CommandRequestChannel: commandRequestChannel,
+		UseWeb:                arguments.UseWeb,
 	}
 	commander.Start()
 }

@@ -18,7 +18,8 @@ const serverPort = "1111"
 var history = make([]models.BroadcastMessage, 0)
 
 type WebServer struct {
-	BroadcastChannel models.BroadcastChannel
+	BroadcastChannel      models.BroadcastChannel
+	CommandRequestChannel models.CommandRequestChannel
 }
 
 func (server WebServer) Start() {
@@ -26,11 +27,13 @@ func (server WebServer) Start() {
 	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./views/static"))))
 
 	http.HandleFunc("/api/history", server.serveHistory)
+	http.HandleFunc("/api/command", server.handleCommandRequest)
+
 	http.HandleFunc("/ws", server.serveWebSockets)
 
 	openBrowser("http://localhost:" + serverPort)
 
-	err := http.ListenAndServe(":"+serverPort, nil)
+	err := http.ListenAndServe("127.0.0.1:"+serverPort, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -76,6 +79,13 @@ func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Re
 func (server WebServer) serveHistory(writer http.ResponseWriter, req *http.Request) {
 	writer.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(writer).Encode(history)
+}
+
+func (server WebServer) handleCommandRequest(writer http.ResponseWriter, req *http.Request) {
+	defer req.Body.Close()
+	commandRequest := models.CommandRequest{}
+	json.NewDecoder(req.Body).Decode(&commandRequest)
+	server.CommandRequestChannel <- commandRequest
 }
 
 func openBrowser(url string) {

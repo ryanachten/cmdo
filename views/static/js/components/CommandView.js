@@ -7,6 +7,7 @@ import {
 } from "https://esm.sh/preact@10.18.1/hooks";
 
 import { useFilteredHistory } from "../helpers.js";
+import { BASE_API_URL } from "../constants.js";
 
 const html = htm.bind(h);
 
@@ -44,15 +45,30 @@ function CommandList({ commandName, messages, color }) {
     });
   }, [filteredMessages.length]);
 
+  const stopCommand = async () =>
+    await fetch(`${BASE_API_URL}/command`, {
+      method: "POST",
+      body: JSON.stringify({
+        commandName,
+        requestedState: "stop",
+      }),
+    });
+
   return html`<section
     className="terminal__container command-view__container command--${color}"
   >
     <div className="terminal__header">
-      <span className="command__heading terminal__tab">${commandName}</span>
-      <input
-        placeholder="Search logs"
-        onChange=${(e) => setSearchTerm(e.target.value)}
-      />
+      <span className="terminal__tab">${commandName}</span>
+      <div className="command-view__heading-inputs">
+        <input
+          className="command-view__container"
+          placeholder="Search logs"
+          onChange=${(e) => setSearchTerm(e.target.value)}
+        />
+        <button className="command-view__stop-button" onClick=${stopCommand}>
+          Stop
+        </button>
+      </div>
     </div>
     <ul ref=${listRef}>
       ${filteredMessages.map(
