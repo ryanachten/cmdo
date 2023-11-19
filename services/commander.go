@@ -7,7 +7,6 @@ import (
 	"os/exec"
 	"os/signal"
 	"runtime"
-	"sync"
 	"syscall"
 
 	"github.com/fatih/color"
@@ -21,7 +20,6 @@ type Commander struct {
 	BroadcastChannel      models.BroadcastChannel
 	CommandRequestChannel models.CommandRequestChannel
 	UseWeb                bool
-	wg                    sync.WaitGroup
 	commandColours        map[string]color.Attribute // command name / colour lookup
 	userCommands          map[string]models.Command  // command name / command input lookup
 	systemCommands        map[string]*exec.Cmd       // command name / exec command lookup
@@ -37,46 +35,20 @@ func (c *Commander) Start() {
 		c.userCommands[command.Name] = command
 
 		go c.startCommand(command)
-
-		c.wg.Add(1)
 	}
 
-	// Watch for updates in the command request channel
-	go func() {
-		for {
-			req := <-c.CommandRequestChannel
-			systemCommand := c.systemCommands[req.CommandName]
-			if req.RequestedState == models.CommandRequestStop {
-				err := killProcess(systemCommand.Process)
-				if err != nil {
-					log.Printf("Error killing process: %v", err)
-				}
-			} else {
-				userCommand := c.userCommands[req.CommandName]
-				go c.startCommand(userCommand)
-			}
-		}
-	}()
+	go c.handleCommandRequests()
 
-	// Wait for all processes to finish or a signal to stop.
-	go func() {
-		c.wg.Wait()
-		close(c.BroadcastChannel)
-		close(c.CommandRequestChannel)
-	}()
-
-	// TODO: is this signalChannel still needed?
 	// Handle signals to stop all processes (e.g., Ctrl+C).
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
 	<-signalChannel
+	close(c.BroadcastChannel)
+	close(c.CommandRequestChannel)
 	close(signalChannel)
 }
 
 func (c *Commander) startCommand(command models.Command) {
-	// TODO: we need to reconsider how this wait group is used in the new control flow
-	// defer c.wg.Done()
-
 	cmd := command.Create(c.commandColours[command.Name], c.BroadcastChannel, c.UseWeb)
 	err := cmd.Start()
 
@@ -93,6 +65,26 @@ func (c *Commander) startCommand(command models.Command) {
 		fmt.Printf("Command %s exited with error: %v\n", command.Name, err)
 	} else {
 		fmt.Printf("Command %s exited successfully\n", command.Name)
+	}
+}
+
+// Watch for updates in the command request channel
+func (c *Commander) handleCommandRequests() {
+	for {
+		req := <-c.CommandRequestChannel
+		systemCommand := c.systemCommands[req.CommandName]
+
+		// If the user is requesting a command to stop, we kill the process
+		if req.RequestedState == models.CommandRequestStop {
+			err := killProcess(systemCommand.Process)
+			if err != nil {
+				log.Printf("Error killing process: %v", err)
+			}
+		} else {
+			// Otherwise, if the user is requesting a command to start, we start it
+			userCommand := c.userCommands[req.CommandName]
+			go c.startCommand(userCommand)
+		}
 	}
 }
 
