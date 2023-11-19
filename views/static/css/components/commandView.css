@@ -17,12 +17,19 @@
   margin-right: var(--s-small);
 }
 
-.command-view__stop-button {
-  border: 2px solid var(--c-red);
-  background-color: var(--c-red);
+.command-view__button {
+  border: none;
   border-radius: 3px;
   color: var(--c-white);
   font-weight: bold;
+}
+
+.command-view__button--stop {
+  background-color: var(--c-red);
+}
+
+.command-view__button--start {
+  background-color: var(--c-green);
 }
 
 .command-view__container ul {

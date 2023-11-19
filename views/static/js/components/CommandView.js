@@ -36,6 +36,10 @@ function CommandList({ commandName, messages, color }) {
    * @type {[string, () => string]}
    */
   const [searchTerm, setSearchTerm] = useState();
+  /**
+   * @type {[bool, () => bool]}
+   */
+  const [isActive, setActive] = useState(true); // TODO: really this should be determined by the backend
   const filteredMessages = useFilteredHistory(searchTerm, messages);
 
   useEffect(() => {
@@ -45,14 +49,19 @@ function CommandList({ commandName, messages, color }) {
     });
   }, [filteredMessages.length]);
 
-  const stopCommand = async () =>
+  /**
+   * @param {"stop" | "start"} requestedState
+   */
+  const updateCommandState = async (requestedState) => {
     await fetch(`${BASE_API_URL}/command`, {
       method: "POST",
       body: JSON.stringify({
         commandName,
-        requestedState: "stop",
+        requestedState,
       }),
     });
+    setActive(requestedState === "start");
+  };
 
   return html`<section
     className="terminal__container command-view__container command--${color}"
@@ -65,9 +74,19 @@ function CommandList({ commandName, messages, color }) {
           placeholder="Search logs"
           onChange=${(e) => setSearchTerm(e.target.value)}
         />
-        <button className="command-view__stop-button" onClick=${stopCommand}>
-          Stop
-        </button>
+        ${isActive
+          ? html`<button
+              className="command-view__button command-view__button--stop"
+              onClick=${() => updateCommandState("stop")}
+            >
+              Stop
+            </button>`
+          : html`<button
+              className="command-view__button command-view__button--start"
+              onClick=${() => updateCommandState("start")}
+            >
+              Start
+            </button>`}
       </div>
     </div>
     <ul ref=${listRef}>
