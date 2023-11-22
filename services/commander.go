@@ -10,19 +10,19 @@ import (
 	"syscall"
 
 	"github.com/fatih/color"
+	"github.com/ryanachten/cmdo/events"
 	"github.com/ryanachten/cmdo/models"
 )
 
 var terminalColours = []color.Attribute{color.FgCyan, color.FgMagenta, color.FgGreen, color.FgBlue}
 
 type Commander struct {
-	Commands              []models.Command
-	BroadcastChannel      models.BroadcastChannel
-	CommandRequestChannel models.CommandRequestChannel
-	UseWeb                bool
-	commandColours        map[string]color.Attribute // command name / colour lookup
-	userCommands          map[string]models.Command  // command name / command input lookup
-	systemCommands        map[string]*exec.Cmd       // command name / exec command lookup
+	Commands       []models.Command
+	EventBus       events.EventBus
+	UseWeb         bool
+	commandColours map[string]color.Attribute // command name / colour lookup
+	userCommands   map[string]models.Command  // command name / command input lookup
+	systemCommands map[string]*exec.Cmd       // command name / exec command lookup
 }
 
 func (c *Commander) Start() {
@@ -43,13 +43,11 @@ func (c *Commander) Start() {
 	signalChannel := make(chan os.Signal, 1)
 	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
 	<-signalChannel
-	close(c.BroadcastChannel)
-	close(c.CommandRequestChannel)
-	close(signalChannel)
+	c.EventBus.Close()
 }
 
 func (c *Commander) startCommand(command models.Command) {
-	cmd := command.Create(c.commandColours[command.Name], c.BroadcastChannel, c.UseWeb)
+	cmd := command.Create(c.commandColours[command.Name], c.EventBus.CommandOutput, c.UseWeb)
 	err := cmd.Start()
 
 	c.systemCommands[command.Name] = &cmd
@@ -71,14 +69,15 @@ func (c *Commander) startCommand(command models.Command) {
 // Watch for updates in the command request channel
 func (c *Commander) handleCommandRequests() {
 	for {
-		req := <-c.CommandRequestChannel
+		req := <-c.EventBus.CommandRequest
 		systemCommand := c.systemCommands[req.CommandName]
 
 		// If the user is requesting a command to stop, we kill the process
-		if req.RequestedState == models.CommandRequestStop {
+		if req.RequestedState == events.CommandRequestStop {
 			err := killProcess(systemCommand.Process)
 			if err != nil {
 				log.Printf("Error killing process: %v", err)
+				continue
 			}
 		} else {
 			// Otherwise, if the user is requesting a command to start, we start it

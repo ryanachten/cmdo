@@ -5,6 +5,7 @@ import (
 	"os/exec"
 
 	"github.com/fatih/color"
+	"github.com/ryanachten/cmdo/events"
 )
 
 type Command struct {
@@ -15,7 +16,7 @@ type Command struct {
 	Tags             []string `json:"tags"`
 }
 
-func (c Command) Create(commandColour color.Attribute, broadcastChannel BroadcastChannel, useWeb bool) exec.Cmd {
+func (c Command) Create(commandColour color.Attribute, broadcastChannel events.CommandOutputChannel, useWeb bool) exec.Cmd {
 	cmd := exec.Command(c.Executable, c.Arguments...)
 
 	cmd.Stdout = &commandWriter{
@@ -43,7 +44,7 @@ type commandWriter struct {
 	color            *color.Color
 	commandName      string
 	isError          bool
-	broadcastChannel BroadcastChannel
+	broadcastChannel events.CommandOutputChannel
 	useWeb           bool
 }
 
@@ -51,18 +52,16 @@ type commandWriter struct {
 func (cw *commandWriter) Write(p []byte) (n int, err error) {
 	message := string(p)
 	writer := os.Stdout
-	messageType := InformationMessage
 	if cw.isError {
 		writer = os.Stderr
-		messageType = ErrorMessage
 	}
 
 	cw.color.Fprintf(writer, "[%s]: %s", cw.commandName, message)
 	if cw.useWeb {
-		cw.broadcastChannel <- BroadcastMessage{
-			MessageType: messageType,
-			CommandName: cw.commandName,
-			MessageBody: message,
+		if cw.isError {
+			cw.broadcastChannel <- events.CommandOutputError(cw.commandName, message)
+		} else {
+			cw.broadcastChannel <- events.CommandOutputInformation(cw.commandName, message)
 		}
 	}
 
