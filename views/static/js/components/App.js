@@ -8,7 +8,7 @@ import htm from "https://esm.sh/htm@3.1.1";
 
 import CommandView from "./CommandView.js";
 import InlineView from "./InlineView.js";
-import { BASE_URL, COMMAND_COLORS } from "../constants.js";
+import { BASE_API_URL, BASE_WS_URL, COMMAND_COLORS } from "../constants.js";
 import {
   useFilteredCommands,
   useFilteredHistory,
@@ -20,8 +20,9 @@ const html = htm.bind(h);
 /**
  * @typedef {"command" | "inline"} ViewMode
  * @typedef {"error" | "information"} MessageType
- * @typedef {{commandName: string, messageBody: string, messageType: MessageType}} Message
- * @typedef {Object.<string, {history: Message[], color: string}>} CommandHash
+ * @typedef {"started" | "stopped" | "failed"} CommandState
+ * @typedef {{commandName: string, messageGroup: "commandOutput" | "commandState", messageBody: string, messageType: MessageType}} Message
+ * @typedef {Object.<string, {history: Message[], color: string, state: CommandState}>} CommandHash
  */
 
 function App() {
@@ -64,7 +65,27 @@ function App() {
       } else {
         const index = Object.keys(updatedCommands).length;
         const color = COMMAND_COLORS[index % COMMAND_COLORS.length];
-        updatedCommands[commandName] = { history: [message], color };
+        updatedCommands[commandName] = {
+          history: [message],
+          color,
+          state: "started",
+        };
+      }
+
+      return updatedCommands;
+    });
+  };
+
+  /**
+   * @param {string} commandName
+   * @param {CommandState} state
+   */
+  const updateCommandState = (commandName, state) => {
+    setCommands((prevCommands) => {
+      const updatedCommands = { ...prevCommands };
+
+      if (commandName in updatedCommands) {
+        updatedCommands[commandName].state = state;
       }
 
       return updatedCommands;
@@ -72,7 +93,7 @@ function App() {
   };
 
   const getHistory = async () => {
-    const res = await fetch(`http://${BASE_URL}/api/history`);
+    const res = await fetch(`${BASE_API_URL}/history`);
     /**
      * @type {Message[]}
      */
@@ -93,6 +114,10 @@ function App() {
      * @type {Message}
      */
     const message = JSON.parse(event.data);
+    if (message.messageGroup === "commandState") {
+      updateCommandState(message.commandName, message.messageType);
+      return;
+    }
     message.messageBody = formatMessageBody(message.messageBody);
     if (!message.messageBody) return;
 
@@ -102,7 +127,7 @@ function App() {
 
   useEffect(() => {
     getHistory();
-    const socket = new WebSocket(`ws://${BASE_URL}/ws`);
+    const socket = new WebSocket(BASE_WS_URL);
     socket.onmessage = handleSocketResponse;
   }, []);
 

@@ -1,8 +1,56 @@
 .command-view {
     display: grid;
     grid-gap: var(--s-large);
-    grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     justify-items: center;
+}
+
+.command-view--stopped ul, .command-view--failed ul {
+  opacity: 0.7;
+}
+
+
+.command-view__heading-inputs {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 var(--s);
+  width: 100%;
+}
+
+.command-view__heading-inputs input {
+  flex-grow: 1;
+  margin-right: var(--s-small);
+}
+
+.command-view__button {
+  border: none;
+  border-radius: 3px;
+  color: var(--c-white);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.command-view__button--stop {
+  background-color: var(--c-red);
+}
+
+.command-view__button--start {
+  background-color: var(--c-green);
+}
+
+.command-view__status {
+  box-shadow:  0px 10px 10px rgb(34 34 34 / 50%);
+  color: var(--c-white);
+  padding: var(--s-small) 0;
+  text-align: center;
+}
+
+.command-view__status--stopped {
+  background-color: #222222;
+}
+
+.command-view__status--failed {
+  background-color: var(--c-red);
 }
 
 .command-view__container ul {

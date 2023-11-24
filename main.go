@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/ryanachten/cmdo/events"
 	"github.com/ryanachten/cmdo/models"
 	"github.com/ryanachten/cmdo/services"
 )
@@ -20,19 +21,19 @@ func main() {
 		log.Fatalln("No commands selected using the provided arguments")
 	}
 
-	var broadcastChannel = make(chan models.BroadcastMessage)
+	eventBus := events.CreateEventBus()
 
 	if arguments.UseWeb {
 		webServer := services.WebServer{
-			BroadcastChannel: broadcastChannel,
+			EventBus: eventBus,
 		}
 		go webServer.Start()
 	}
 
 	commander := services.Commander{
-		Commands:         commands,
-		BroadcastChannel: broadcastChannel,
-		UseWeb:           arguments.UseWeb,
+		Commands: commands,
+		EventBus: eventBus,
+		UseWeb:   arguments.UseWeb,
 	}
 	commander.Start()
 }

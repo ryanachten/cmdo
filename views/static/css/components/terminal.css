@@ -5,7 +5,7 @@
 }
 
 .terminal__header input {
-    color: var(--c-text);
+    color: var(--c-xdark);
     height: fit-content;
     flex-grow: 1;
     margin-right: var(--s);
