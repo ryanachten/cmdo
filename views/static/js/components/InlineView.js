@@ -17,7 +17,7 @@ function InlineView({ history, commands, contentRef }) {
 
   return html`<div className="inline-view">
     <div className="terminal__container">
-      <span className="terminal__tab">cmdo</span>
+      <span className="terminal__tab command__heading">cmdo</span>
       <ul>
         ${history.map(({ commandName, messageBody, messageType }) => {
           const className = `inline-view__item command--${

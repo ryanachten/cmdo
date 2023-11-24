@@ -3,6 +3,16 @@
     justify-content: center;
 }
 
+.inline-view .terminal__tab.command__heading::before {
+    background-image: url(/static/img/cmdo_logo.png);
+    background-position: center;
+    background-size: cover;
+    content: "";
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+}
+
 .inline-view__item {
     display: flex;
 }

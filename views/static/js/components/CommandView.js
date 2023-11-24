@@ -76,7 +76,7 @@ function CommandList({ commandName, messages, color, state }) {
     className="terminal__container command-view__container command--${color} command-view--${state}"
   >
     <div className="terminal__header">
-      <span className="terminal__tab">${commandName}</span>
+      <span className="terminal__tab command__heading">${commandName}</span>
       <div className="command-view__heading-inputs">
         <input
           className="command-view__container"
