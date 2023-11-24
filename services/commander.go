@@ -54,8 +54,11 @@ func (c *Commander) startCommand(command models.Command) {
 
 	if err != nil {
 		fmt.Printf("Error starting command: %v\n", err)
+		c.EventBus.CommandState <- events.CommandStateFail(command.Name, err.Error())
 		return
 	}
+
+	c.EventBus.CommandState <- events.CommandStateStart(command.Name)
 
 	// Wait for the command to finish.
 	err = cmd.Wait()
@@ -77,8 +80,10 @@ func (c *Commander) handleCommandRequests() {
 			err := killProcess(systemCommand.Process)
 			if err != nil {
 				log.Printf("Error killing process: %v", err)
+				c.EventBus.CommandState <- events.CommandStateFail(req.CommandName, err.Error())
 				continue
 			}
+			c.EventBus.CommandState <- events.CommandStateStop(req.CommandName)
 		} else {
 			// Otherwise, if the user is requesting a command to start, we start it
 			userCommand := c.userCommands[req.CommandName]

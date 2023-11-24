@@ -60,13 +60,17 @@ func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Re
 	clients[conn] = true
 
 	for {
-		msg := <-server.EventBus.CommandOutput
-		history = append(history, msg)
-		broadcastMessage(msg, conn)
+		select {
+		case msg := <-server.EventBus.CommandOutput:
+			history = append(history, msg)
+			broadcastMessage(msg, conn)
+		case msg := <-server.EventBus.CommandState:
+			broadcastMessage(msg, conn)
+		}
 	}
 }
 
-func broadcastMessage(msg interface{}, conn *websocket.Conn) {
+func broadcastMessage(msg events.BroadcastMessage, conn *websocket.Conn) {
 	for client, connected := range clients {
 		if connected {
 			err := client.WriteJSON(msg)
