@@ -22,15 +22,16 @@ function CommandView({ commands }) {
           commandName=${commandName}
           messages=${command.history}
           color=${command.color}
+          state=${command.state}
         />`
     )}
   </div>`;
 }
 
 /**
- * @param {{ commandName: string, messages: import('./App.js').Message[], color: string }}
+ * @param {{ commandName: string, messages: import('./App.js').Message[], color: string, state: import('./App.js').CommandState }}
  */
-function CommandList({ commandName, messages, color }) {
+function CommandList({ commandName, messages, color, state }) {
   const listRef = useRef(null);
   /**
    * @type {[string, () => string]}
@@ -49,6 +50,14 @@ function CommandList({ commandName, messages, color }) {
     });
   }, [filteredMessages.length]);
 
+  useEffect(() => {
+    if (state === "started") {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  }, [state]);
+
   /**
    * @param {"stop" | "start"} requestedState
    */
@@ -64,7 +73,7 @@ function CommandList({ commandName, messages, color }) {
   };
 
   return html`<section
-    className="terminal__container command-view__container command--${color}"
+    className="terminal__container command-view__container command--${color} command-view--${state}"
   >
     <div className="terminal__header">
       <span className="terminal__tab">${commandName}</span>
@@ -89,6 +98,14 @@ function CommandList({ commandName, messages, color }) {
             </button>`}
       </div>
     </div>
+    ${state === "stopped" &&
+    html`<div className="command-view__status command-view__status--stopped">
+      ${commandName} has stopped
+    </div>`}
+    ${state === "failed" &&
+    html`<div className="command-view__status command-view__status--failed">
+      ${commandName} has failed
+    </div>`}
     <ul ref=${listRef}>
       ${filteredMessages.map(
         (message) =>

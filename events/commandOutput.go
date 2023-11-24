@@ -1,7 +1,5 @@
 package events
 
-type CommandOutputType = string
-
 type CommandOutputChannel = chan BroadcastMessage
 
 const commandOutputMessageGroup = "commandOutput"

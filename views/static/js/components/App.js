@@ -20,8 +20,9 @@ const html = htm.bind(h);
 /**
  * @typedef {"command" | "inline"} ViewMode
  * @typedef {"error" | "information"} MessageType
- * @typedef {{commandName: string, messageBody: string, messageType: MessageType}} Message
- * @typedef {Object.<string, {history: Message[], color: string}>} CommandHash
+ * @typedef {"started" | "stopped" | "failed"} CommandState
+ * @typedef {{commandName: string, messageGroup: "commandOutput" | "commandState", messageBody: string, messageType: MessageType}} Message
+ * @typedef {Object.<string, {history: Message[], color: string, state: CommandState}>} CommandHash
  */
 
 function App() {
@@ -64,7 +65,27 @@ function App() {
       } else {
         const index = Object.keys(updatedCommands).length;
         const color = COMMAND_COLORS[index % COMMAND_COLORS.length];
-        updatedCommands[commandName] = { history: [message], color };
+        updatedCommands[commandName] = {
+          history: [message],
+          color,
+          state: "started",
+        };
+      }
+
+      return updatedCommands;
+    });
+  };
+
+  /**
+   * @param {string} commandName
+   * @param {CommandState} state
+   */
+  const updateCommandState = (commandName, state) => {
+    setCommands((prevCommands) => {
+      const updatedCommands = { ...prevCommands };
+
+      if (commandName in updatedCommands) {
+        updatedCommands[commandName].state = state;
       }
 
       return updatedCommands;
@@ -93,6 +114,10 @@ function App() {
      * @type {Message}
      */
     const message = JSON.parse(event.data);
+    if (message.messageGroup === "commandState") {
+      updateCommandState(message.commandName, message.messageType);
+      return;
+    }
     message.messageBody = formatMessageBody(message.messageBody);
     if (!message.messageBody) return;
 
