@@ -1,8 +1,6 @@
-# cmdo
+![cmdo banner](./docs/cmdo_banner.png)
 
 `cmdo` ("commando") - run multiple commands in parallel
-
-![command view](./docs/cmdo_commands.jpg)
 
 ## Usage
 
@@ -20,6 +18,8 @@ This automatically adds it to your path for use:
 go install github.com/ryanachten/cmdo@main # install latest from main branch
 cmdo --config .\example-config.json # use cmdo!
 ```
+
+![command view](./docs/cmdo_commands.jpg)
 
 #### Release builds
 
