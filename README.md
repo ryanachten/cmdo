@@ -1,4 +1,4 @@
-![cmdo banner](./docs/cmdo_banner.png)
+![cmdo banner](./docs/cmdo_promo.png)
 
 `cmdo` ("commando") - run multiple commands in parallel
 
