@@ -16,6 +16,7 @@ import (
 const serverPort = "1111"
 
 var history = make([]events.BroadcastMessage, 0)
+var currentState = make(map[string]events.CommandStateType)
 
 type WebServer struct {
 	EventBus events.EventBus
@@ -25,6 +26,7 @@ func (server WebServer) Start() {
 	http.HandleFunc("/", serveHome)
 	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./views/static"))))
 
+	http.HandleFunc("/api/state", server.serveState)
 	http.HandleFunc("/api/history", server.serveHistory)
 	http.HandleFunc("/api/command", server.handleCommandRequest)
 
@@ -65,6 +67,7 @@ func (server WebServer) serveWebSockets(writer http.ResponseWriter, req *http.Re
 			history = append(history, msg)
 			broadcastMessage(msg, conn)
 		case msg := <-server.EventBus.CommandState:
+			currentState[msg.CommandName] = msg.MessageType
 			broadcastMessage(msg, conn)
 		}
 	}
@@ -81,6 +84,11 @@ func broadcastMessage(msg events.BroadcastMessage, conn *websocket.Conn) {
 			}
 		}
 	}
+}
+
+func (server WebServer) serveState(writer http.ResponseWriter, req *http.Request) {
+	writer.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(writer).Encode(currentState)
 }
 
 func (server WebServer) serveHistory(writer http.ResponseWriter, req *http.Request) {

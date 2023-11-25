@@ -40,7 +40,7 @@ function CommandList({ commandName, messages, color, state }) {
   /**
    * @type {[bool, () => bool]}
    */
-  const [isActive, setActive] = useState(true); // TODO: really this should be determined by the backend
+  const [isActive, setActive] = useState(true);
   const filteredMessages = useFilteredHistory(searchTerm, messages);
 
   useEffect(() => {
@@ -69,7 +69,6 @@ function CommandList({ commandName, messages, color, state }) {
         requestedState,
       }),
     });
-    setActive(requestedState === "start");
   };
 
   return html`<section

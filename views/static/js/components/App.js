@@ -92,6 +92,17 @@ function App() {
     });
   };
 
+  const getState = async () => {
+    const res = await fetch(`${BASE_API_URL}/state`);
+    /**
+     * @type {Object<string, CommandState>}
+     */
+    const json = await res.json();
+    for (const commandName in json) {
+      updateCommandState(commandName, json[commandName]);
+    }
+  };
+
   const getHistory = async () => {
     const res = await fetch(`${BASE_API_URL}/history`);
     /**
@@ -125,11 +136,13 @@ function App() {
     addMessageToCommands(message);
   };
 
-  useEffect(() => {
-    getHistory();
+  const init = async () => {
+    await getHistory();
+    getState();
     const socket = new WebSocket(BASE_WS_URL);
     socket.onmessage = handleSocketResponse;
-  }, []);
+  };
+  useEffect(() => init(), []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = darkMode ? "dark" : "light";
